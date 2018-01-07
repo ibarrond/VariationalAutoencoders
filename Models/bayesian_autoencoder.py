@@ -1,16 +1,22 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import time
+import matplotlib.pyplot as plt
+
+mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 class BayesianAutoencoder(object):
-    def __init__(self, n_datapoints, neurons_per_layer, mc_samples, batch_size, constant_prior=False):
+    def __init__(self, neurons_per_layer, mc_samples, batch_size, constant_prior=False):
         # SIZES
-        self.N = n_datapoints
+        tf.reset_default_graph()
+        
+        self.N = mnist.train.num_examples
         self.layers = len(neurons_per_layer)
         self.neurons_per_layer = neurons_per_layer
         self.M = batch_size
         ## Set the number of Monte Carlo samples as a placeholder so that it can be different for training and test
-        self.L =  tf.placeholder(tf.int32)
+        # self.L =  tf.placeholder(tf.int32)
+        self.L = mc_samples
         
         self.constant_prior = constant_prior
         
@@ -160,14 +166,14 @@ class BayesianAutoencoder(object):
         and average the log-likelihoods in the end (expectation approximation).
         """
         
-        log_p = 0
+        batch_log_p = 0
         cum_output = 0
         
         for output in self.feedforward():
             log_p_per_sample = tf.reduce_sum(tf.reduce_sum(
                                     self.Y * tf.log(output + 1e-10) + (1 - self.Y) * tf.log(1 - output + 1e-10),
                                     reduction_indices=[1]))
-            log_p += log_p_per_sample
+            batch_log_p += log_p_per_sample
             cum_output += output
             
         ell = batch_log_p / self.L
@@ -260,7 +266,7 @@ class BayesianAutoencoder(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.Y: batch_xs, self.L: 1})
+                    feed_dict={self.X: batch_xs, self.Y: batch_xs})
                 train_writer.add_summary(summary, i)
                 train_cost += loss
                 cum_ell += ell
@@ -289,9 +295,9 @@ class BayesianAutoencoder(object):
         
         cost = 0
         for batch_i in range(benchmark_data.num_examples // self.M):
-            batch_xs, _ = benchmark_data.next_batch(batch_size)
+            batch_xs, _ = benchmark_data.next_batch(self.M)
             cost += self.session.run(self.loss,
-                                   feed_dict={self.X: batch_xs, self.Y: batch_xs, self.L: 1})
+                                   feed_dict={self.X: batch_xs, self.Y: batch_xs})
         return cost / (benchmark_data.num_examples // self.M)
         
     def serialize(self, path):
@@ -307,8 +313,27 @@ class BayesianAutoencoder(object):
     
     def predict(self, batch):
         outputs = self.layer_out
-        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch, self.L: 10})
+        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch})
     
     def get_weights(self):
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
         return self.session.run(weights)
+    
+    def plot_enc_dec(n_examples = 10):
+        # Plot example reconstructions
+        test_xs, _ = mnist.test.next_batch(n_examples)
+        recon = vi.predict(test_xs)
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for example_i in range(n_examples):
+            axs[0][example_i].imshow(
+                np.reshape(test_xs[example_i, :], (28, 28)))
+            axs[1][example_i].imshow(
+                np.reshape(
+                    np.reshape(recon[example_i, ...], (784,)),
+                    (28, 28)))
+            plt.gray()
+            axs[0][example_i].get_xaxis().set_visible(False)
+            axs[0][example_i].get_yaxis().set_visible(False)
+            axs[1][example_i].get_xaxis().set_visible(False)
+            axs[1][example_i].get_yaxis().set_visible(False)
+        plt.show()
