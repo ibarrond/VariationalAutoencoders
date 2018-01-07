@@ -1,0 +1,9 @@
+QUESTIONS:
+- [ELBO] Why is (in Maurizio's implementation of ELBO) only the LogLikelihood summed over the batch and not the KL divergence?
+- [PRIOR, KL DIV] Why do variational autoencoders use standard normal prior? cna we train/generalize more?
+- Our plan is to compare ELBO of both models. How can we compare KL divergences? maybe by averaging them out?
+- Does it even make sense to compare KL-divergences of different priors etc.? Or should we just compare the test-log-likelihood?
+
+
+TODO:
+- 
