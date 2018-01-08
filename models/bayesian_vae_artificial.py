@@ -6,7 +6,7 @@ import numpy as np
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-class BayesianVAE(object):
+class BayesianVAEArtificial(object):
     def __init__(self,
                  n_inputs=784,
                  n_neurons_encoder = [2048, 256],
@@ -160,24 +160,26 @@ class BayesianVAE(object):
         cum_out = 0
         cum_ll = 0
         
+        encodigns = []
         for i in range(self.L):
-            outputs = self.X
-            
+
             # ENCODER
             for i in range(self.length_encoder):
                 W = self.sample_from_W('W_enc_' + str(i))
                 W_bias = self.sample_from_W('W_enc_' + str(i), bias=True)
-                # W_bias = tf.expand_dims(W_bias, 1)            
+                W_bias = tf.expand_dims(W_bias, 1)            
                 outputs = self.activ(tf.matmul(outputs, W) + W_bias)
 
+            encodings.append(outputs)
+            ##### SOLVE tensor mc samples first!!! Then it becomes easier!
             # LATENT
             W = self.sample_from_W('W_latent_mu')
             W_bias = self.sample_from_W('W_latent_mu', bias=True)
-            # W_bias = tf.expand_dims(W_bias, 1)
+            W_bias = tf.expand_dims(W_bias, 1)
             z_mu = tf.matmul(outputs, W) + W_bias
             W = self.sample_from_W('W_latent_log_sigma')
             W_bias = self.sample_from_W('W_latent_log_sigma', bias=True)
-            # W_bias = tf.expand_dims(W_bias, 1)
+            W_bias = tf.expand_dims(W_bias, 1)
             z_log_sigma = 0.5 * (tf.matmul(outputs, W) + W_bias)
 
             # Sample from posterior
@@ -186,17 +188,17 @@ class BayesianVAE(object):
             # DECODER
             W = self.sample_from_W('W_dec_' + str(0))
             W_bias = self.sample_from_W('W_dec_' + str(0), bias=True)
-            # W_bias = tf.expand_dims(W_bias, 1)
+            W_bias = tf.expand_dims(W_bias, 1)
             outputs = self.activ(tf.matmul(z, W) + W_bias)
             for i in range(1, self.length_decoder):
                 W = self.sample_from_W('W_dec_' + str(i))
                 W_bias = self.sample_from_W('W_dec_' + str(i), bias=True)
-                # W_bias = tf.expand_dims(W_bias, 1)
+                W_bias = tf.expand_dims(W_bias, 1)
                 outputs = self.activ(tf.matmul(outputs, W) + W_bias)
 
             W = self.sample_from_W('W_dec_' + str(self.length_decoder))
             W_bias = self.sample_from_W('W_dec_' + str(self.length_decoder), bias=True)
-            # W_bias = tf.expand_dims(W_bias, 1)
+            W_bias = tf.expand_dims(W_bias, 1)
             outputs = tf.nn.sigmoid(tf.matmul(outputs, W) + W_bias)
 
             ll = self.get_ll(self.Y, outputs)

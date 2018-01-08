@@ -7,7 +7,7 @@ import numpy as np
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 class BayesianAutoencoder(object):
-    def __init__(self, neurons_per_layer, batch_size, constant_prior=False):
+    def __init__(self, neurons_per_layer, batch_size, mc_samples=1, constant_prior=False):
         # SIZES
         tf.reset_default_graph()
         
@@ -16,8 +16,8 @@ class BayesianAutoencoder(object):
         self.neurons_per_layer = neurons_per_layer
         self.M = batch_size
         ## Set the number of Monte Carlo samples as a placeholder so that it can be different for training and test
-        self.L =  tf.placeholder(tf.int32)
-        # self.L = mc_samples
+        # self.L =  tf.placeholder(tf.int32)
+        self.L = mc_samples
         
         self.constant_prior = constant_prior
         
@@ -107,10 +107,11 @@ class BayesianAutoencoder(object):
         """
 
         for i in range(self.layers - 1):
-            mc_samples = self.L
+            # mc_samples = self.L
             d_in = self.neurons_per_layer[i] + 1 # + 1 because of bias weight
             d_out = self.neurons_per_layer[i+1]
-            z = self.get_std_norm_samples([mc_samples, d_in, d_out])
+            # z = self.get_std_norm_samples([mc_samples, d_in, d_out])
+            z = self.get_std_norm_samples([d_in, d_out])
             ## division by 2 to obtain pure standard deviation
             w_from_q = tf.add(tf.multiply(z, tf.exp(self.log_var_W[i] / 2)), self.mean_W[i])
         
@@ -137,37 +138,47 @@ class BayesianAutoencoder(object):
         """
         
         # We will generate L output samples
-        batch_size = tf.shape(self.X)[0]
-        d_in = tf.shape(self.X)[-1]
-        outputs = tf.multiply(tf.ones([self.L, batch_size, d_in]), self.X)
+        # batch_size = tf.shape(self.X)[0]
+        # d_in = tf.shape(self.X)[-1]
+        # outputs = tf.multiply(tf.ones([self.L, batch_size, d_in]), self.X)
+        
+        cum_out = 0
+        cum_ll = 0
+        
+        for i in range(self.L):        
+            outputs = self.X
 
-        # Go through each layer (one weight matrix at a time)
-        # and compute the (intermediate) output
-        j = 0
+            # Go through each layer (one weight matrix at a time)
+            # and compute the (intermediate) output
+            j = 0
 
-        for weight_matrix in self.sample_from_W():
-            outputs = tf.matmul(outputs, weight_matrix[:,1:,:])
-            bias = tf.expand_dims(weight_matrix[:,0,:], 1)
-            outputs = outputs + bias
-            tf.summary.histogram('activations', outputs)
+            for weight_matrix in self.sample_from_W():
+                # outputs = tf.matmul(outputs, weight_matrix[:,1:,:])
+                # bias = tf.expand_dims(weight_matrix[:,0,:], 1)
+                # outputs = outputs + bias
+                outputs = tf.matmul(outputs, weight_matrix[1:,:]) + weight_matrix[0,:]
+                tf.summary.histogram('activations', outputs)
 
-            # if last layer is reached, do not use transfer function (softmax later on)
-            if j == (self.layers - 2):
-                outputs = tf.sigmoid(outputs)
-            else:
-                outputs = tf.nn.tanh(outputs)
+                # if last layer is reached, do not use transfer function (softmax later on)
+                if j == (self.layers - 2):
+                    outputs = tf.sigmoid(outputs)
+                else:
+                    outputs = tf.nn.tanh(outputs)
 
-            tf.summary.histogram('outputs', outputs)
+                tf.summary.histogram('outputs', outputs)
 
-            j += 1
+                j += 1
 
-            if j == intermediate:
-                break
+                if j == intermediate:
+                    break
 
-        ll = self.get_ll(self.Y, outputs)
-        avg_out = tf.reduce_mean(outputs, 0)
+            ll = self.get_ll(self.Y, outputs)
+            cum_ll += ll
+            cum_out += outputs
+            # avg_out = tf.reduce_mean(outputs, 0)
 
-        return tf.reduce_mean(ll, 0), avg_out
+            # return tf.reduce_mean(ll, 0), avg_out
+        return cum_ll / self.L, cum_out / self.L
 
     def get_kl(self, mean_W, log_var_W, prior_mean_W, log_prior_var_W):
         """
@@ -255,7 +266,7 @@ class BayesianAutoencoder(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.Y: batch_xs, self.L: 1})
+                    feed_dict={self.X: batch_xs, self.Y: batch_xs})
                 train_writer.add_summary(summary, i)
                 train_cost += loss
                 cum_ell += ell
@@ -285,7 +296,7 @@ class BayesianAutoencoder(object):
         for batch_i in range(benchmark_data.num_examples // self.M):
             batch_xs, _ = benchmark_data.next_batch(self.M)
             cost += self.session.run(self.loss,
-                                   feed_dict={self.X: batch_xs, self.Y: batch_xs, self.L: 1})
+                                   feed_dict={self.X: batch_xs, self.Y: batch_xs})
         return cost / (benchmark_data.num_examples // self.M)
         
     def serialize(self, path):
@@ -301,7 +312,7 @@ class BayesianAutoencoder(object):
     
     def predict(self, batch):
         outputs = self.layer_out
-        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch, self.L: 1})
+        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch})
     
     def get_weights(self):
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
