@@ -35,11 +35,12 @@ class BayesianAutoencoder(object):
     
         # POSTERIOR OF WEIGHTS
         self.mean_W, self.log_var_W = self.init_posterior_W()
-        ## Builds whole computational graph with relevant quantities as part of the class
-        self.loss, self.kl, self.ell, self.layer_out = self.get_nelbo()
-
+        
         ## Initialize the session
         self.session = tf.Session()
+        
+        ## Builds whole computational graph with relevant quantities as part of the class
+        self.loss, self.kl, self.ell, self.layer_out = self.get_nelbo()
 
     def get_prior_W(self):
         """
@@ -234,10 +235,11 @@ class BayesianAutoencoder(object):
 
         ## Initialize TF session
         self.session.run(init)
+        
+        num_batches = mnist.train.num_examples // self.M
 
         for i in range(epochs):
             start_time = time.time()
-            num_batches = mnist.train.num_examples // self.M
             train_cost = 0
             cum_ell = 0
             cum_kl = 0
@@ -266,7 +268,7 @@ class BayesianAutoencoder(object):
             val_cost = self.benchmark(validation=True)
             
             print("   [%.1f] Epoch: %02d | NELBO: %.6f | ELL: %.6f | KL: %.6f | Val. NELBO: %.6f"%(
-                time.time()-start_time,i+1, train_cost, -cum_ell, cum_kl, val_cost ))        
+                time.time()-start_time,i+1, train_cost, cum_ell, cum_kl, val_cost ))        
         
         train_writer.close()
         test_writer.close()
@@ -299,7 +301,7 @@ class BayesianAutoencoder(object):
     
     def predict(self, batch):
         outputs = self.layer_out
-        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch, self.L: 10})
+        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch, self.L: 1})
     
     def get_weights(self):
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
