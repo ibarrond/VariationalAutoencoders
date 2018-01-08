@@ -2,11 +2,12 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import time
 import matplotlib.pyplot as plt
+import numpy as np
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 class BayesianAutoencoder(object):
-    def __init__(self, neurons_per_layer, mc_samples, batch_size, constant_prior=False):
+    def __init__(self, neurons_per_layer, batch_size, constant_prior=False):
         # SIZES
         tf.reset_default_graph()
         
@@ -15,8 +16,8 @@ class BayesianAutoencoder(object):
         self.neurons_per_layer = neurons_per_layer
         self.M = batch_size
         ## Set the number of Monte Carlo samples as a placeholder so that it can be different for training and test
-        # self.L =  tf.placeholder(tf.int32)
-        self.L = mc_samples
+        self.L =  tf.placeholder(tf.int32)
+        # self.L = mc_samples
         
         self.constant_prior = constant_prior
         
@@ -92,11 +93,11 @@ class BayesianAutoencoder(object):
             
         return mean_W, log_var_W
     
-    def get_std_norm_samples(self, d_in, d_out):
+    def get_std_norm_samples(self, shape):
         """
         Draws N(0,1) samples of dimension [d_in, d_out].
         """
-        return tf.random_normal(shape=[d_in, d_out])
+        return tf.random_normal(shape=shape)
 
     def sample_from_W(self):
         """
@@ -105,81 +106,67 @@ class BayesianAutoencoder(object):
         """
 
         for i in range(self.layers - 1):
+            mc_samples = self.L
             d_in = self.neurons_per_layer[i] + 1 # + 1 because of bias weight
             d_out = self.neurons_per_layer[i+1]
-            z = self.get_std_norm_samples(d_in, d_out)
+            z = self.get_std_norm_samples([mc_samples, d_in, d_out])
             ## division by 2 to obtain pure standard deviation
             w_from_q = tf.add(tf.multiply(z, tf.exp(self.log_var_W[i] / 2)), self.mean_W[i])
         
             yield w_from_q
     
-    def feedforward(self, intermediate=0):
-        """
-        Feedforward pass excluding last layer's transfer function.
-        intermediate : index of intermediate layer for output generation
-        """
+    """
+    def get_ll(self, Y, output):
+        return -tf.nn.sigmoid_cross_entropy_with_logits(labels=Y, logits=output)
         
-        # We will generate L output samples
-        for i in range(self.L):
-            
-            outputs = self.X
-            
-            # Go through each layer (one weight matrix at a time)
-            # and compute the (intermediate) output
-            j = 0
-            for weight_matrix in self.sample_from_W():
-                outputs = tf.matmul(outputs, weight_matrix[1:,:]) + weight_matrix[0,:]
-                tf.summary.histogram('activations', outputs)
-
-                # if last layer is reached, do not use transfer function (softmax later on)
-                if j == (self.layers - 2):
-                    outputs = tf.sigmoid(outputs)
-                else:
-                    outputs = tf.nn.tanh(outputs)
-
-                tf.summary.histogram('outputs', outputs)
-                
-                j += 1
-                
-                if j == intermediate:
-                    break
-                
-            # use generator to save memory space
-            yield outputs
+    """
+    def get_ll(self, target, output):
+        return tf.reduce_sum(
+            target * tf.log(output + 1e-10) + \
+            (1 - target) * tf.log(1 - output + 1e-10),
+            reduction_indices=[-1]
+        )
     
-    def predict(self, intermediate=0):
-        """
-        Predict using monte carlo sampling.
-        """
-        
-        expected_output = 0
-        
-        for output in self.feedforward(intermediate):
-            expected_output += output
-            
-        return expected_output / self.L
-    
-    def get_ell(self):
+    def get_ell(self, intermediate=0):
         """
         Returns the expected log-likelihood of the lower bound.
         For this we draw L samples from W, compute the log-likelihood for each
         and average the log-likelihoods in the end (expectation approximation).
+        This function also includes the entire feedforward pass
         """
         
-        batch_log_p = 0
-        cum_output = 0
-        
-        for output in self.feedforward():
-            log_p_per_sample = tf.reduce_sum(tf.reduce_sum(
-                                    self.Y * tf.log(output + 1e-10) + (1 - self.Y) * tf.log(1 - output + 1e-10),
-                                    reduction_indices=[1]))
-            batch_log_p += log_p_per_sample
-            cum_output += output
-            
-        ell = batch_log_p / self.L
-        avg_output = cum_output / self.L
-        
-        return ell, avg_output
+        # We will generate L output samples
+        batch_size = tf.shape(self.X)[0]
+        d_in = tf.shape(self.X)[-1]
+        outputs = tf.multiply(tf.ones([self.L, batch_size, d_in]), self.X)
+
+        # Go through each layer (one weight matrix at a time)
+        # and compute the (intermediate) output
+        j = 0
+
+        for weight_matrix in self.sample_from_W():
+            outputs = tf.matmul(outputs, weight_matrix[:,1:,:])
+            bias = tf.expand_dims(weight_matrix[:,0,:], 1)
+            outputs = outputs + bias
+            tf.summary.histogram('activations', outputs)
+
+            # if last layer is reached, do not use transfer function (softmax later on)
+            if j == (self.layers - 2):
+                outputs = tf.sigmoid(outputs)
+            else:
+                outputs = tf.nn.tanh(outputs)
+
+            tf.summary.histogram('outputs', outputs)
+
+            j += 1
+
+            if j == intermediate:
+                break
+
+        ll = self.get_ll(self.Y, outputs)
+        avg_out = tf.reduce_mean(outputs, 0)
+
+        return tf.reduce_mean(ll, 0), avg_out
 
     def get_kl(self, mean_W, log_var_W, prior_mean_W, log_prior_var_W):
         """
@@ -195,7 +182,7 @@ class BayesianAutoencoder(object):
         mp = prior_mean_W
         log_vp = log_prior_var_W
         
-        return 0.5 * tf.reduce_sum(log_vp - log_vq + (tf.pow(mq - mp, 2) / tf.exp(log_vp)) + tf.exp(log_vq - log_vp) - 1)
+        return 0.5 * tf.reduce_sum(log_vp - log_vq + (tf.square(mq - mp) / tf.exp(log_vp)) + tf.exp(log_vq - log_vp) - 1)
 
     def get_kl_multi(self):
         """
@@ -266,7 +253,7 @@ class BayesianAutoencoder(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.Y: batch_xs})
+                    feed_dict={self.X: batch_xs, self.Y: batch_xs, self.L: 1})
                 train_writer.add_summary(summary, i)
                 train_cost += loss
                 cum_ell += ell
@@ -297,7 +284,7 @@ class BayesianAutoencoder(object):
         for batch_i in range(benchmark_data.num_examples // self.M):
             batch_xs, _ = benchmark_data.next_batch(self.M)
             cost += self.session.run(self.loss,
-                                   feed_dict={self.X: batch_xs, self.Y: batch_xs})
+                                   feed_dict={self.X: batch_xs, self.Y: batch_xs, self.L: 1})
         return cost / (benchmark_data.num_examples // self.M)
         
     def serialize(self, path):
@@ -313,16 +300,16 @@ class BayesianAutoencoder(object):
     
     def predict(self, batch):
         outputs = self.layer_out
-        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch})
+        return self.session.run(outputs, feed_dict={self.X: batch, self.Y: batch, self.L: 10})
     
     def get_weights(self):
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
         return self.session.run(weights)
     
-    def plot_enc_dec(n_examples = 10):
+    def plot_enc_dec(self, n_examples=10):
         # Plot example reconstructions
         test_xs, _ = mnist.test.next_batch(n_examples)
-        recon = vi.predict(test_xs)
+        recon = self.predict(test_xs)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for example_i in range(n_examples):
             axs[0][example_i].imshow(

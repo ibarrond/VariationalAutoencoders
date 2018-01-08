@@ -3,7 +3,28 @@ QUESTIONS:
 - [PRIOR, KL DIV] Why do variational autoencoders use standard normal prior? cna we train/generalize more?
 - Our plan is to compare ELBO of both models. How can we compare KL divergences? maybe by averaging them out?
 - Does it even make sense to compare KL-divergences of different priors etc.? Or should we just compare the test-log-likelihood?
+- How do we change the KL divergence if we want to account for the bayesian weights as well as the latent distribution parameters (e.g. gaussian)?
 
 
 TODO:
-- 
+- Compare the following architectures with log-likelihood on test data + 20 reconstructions (subjective)
+
+-- Normal Autoencoder (incl. input and output neurons):
+--- [784, 32, 784]
+--- [784, 128, 64, 2, 64, 128, 784]
+--- [784, 128, 64, 32, 64, 128, 784]
+
+-- Convolutional Autoencoder (take the architecture from BNN-Autoencoder-Convolutions notebook)
+--- Here we use a gaussian likelihood that needs to be compared
+
+- Jonas: Implement Variational Autoencoder as a bayesian DNN
+- + perhaps compare to sampling approach (fit mean and variance)
+- Alberto: Variational Autoencoder using hypernetwork
+
+
+
+
+For the future:
+- How do we make both models comparable?
+- Ideas:
+-- Compute sample mean and sample variance on latent output of bayesian autoencoder, sampling from gaussian and feed into decoder
