@@ -237,7 +237,7 @@ class BayesianAutoencoder(object):
 
         for i in range(epochs):
             start_time = time.time()
-            print("Epoch: ", i)
+            num_batches = mnist.train.num_examples // self.M
             train_cost = 0
             cum_ell = 0
             cum_kl = 0
@@ -246,7 +246,7 @@ class BayesianAutoencoder(object):
             for batch_i in range(mnist.train.num_examples // self.M):
                 progress = round(float(batch_i) / (mnist.train.num_examples // self.M) * 100)
                 if progress % 10 == 0 and progress != old_progress:
-                    print('Progress: ', str(progress) + '%')
+                    # print('Progress: ', str(progress) + '%')
                     old_progress = progress
 
                 batch_xs, _ = mnist.train.next_batch(self.M)
@@ -259,15 +259,14 @@ class BayesianAutoencoder(object):
                 cum_ell += ell
                 cum_kl += kl
             
+            train_cost /= num_batches
+            cum_ell /= num_batches
+            cum_kl /= num_batches
 
-            print("NELBO: ", train_cost / (mnist.train.num_examples // self.M))
-            print("ELL: ", -cum_ell / (mnist.train.num_examples // self.M))
-            print("KL: ", cum_kl / (mnist.train.num_examples // self.M))
-            print('Epoch training time: ', time.time() - start_time)
-            
             val_cost = self.benchmark(validation=True)
-            print('Validation cost: ', val_cost)
-        
+            
+            print("   [%.1f] Epoch: %02d | NELBO: %.6f | ELL: %.6f | KL: %.6f | Val. NELBO: %.6f"%(
+                time.time()-start_time,i+1, train_cost, -cum_ell, cum_kl, val_cost ))        
         
         train_writer.close()
         test_writer.close()
