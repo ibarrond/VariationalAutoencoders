@@ -28,3 +28,16 @@ For the future:
 - How do we make both models comparable?
 - Ideas:
 -- Compute sample mean and sample variance on latent output of bayesian autoencoder, sampling from gaussian and feed into decoder
+
+
+
+MEETING MAURIZIO:
+- Compare using Test Log Likelihood, but using the same Lokelihood (we're thus ignoring KL divergence)
+- Compare II visualizing Latent Space
+- Compare III reconstruction Visually, turning it into a generative model 
+- Scaled sum of N/M in their Deep Gaussian Processes is correct for KL divergence -> Data independence
+- We can try to make Prior Trainable in VAEsk (right now it's N(0,1)
+EXTRAS:
+- We could have a look on Hypernets for BNN.
+- Any advantage on changing latent space of VAEs?
+FORMAT: Single Python Notebook.
