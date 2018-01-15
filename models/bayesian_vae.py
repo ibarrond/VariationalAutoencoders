@@ -14,7 +14,7 @@ class BayesianVAE(object):
                  n_neurons_decoder = [256, 2048],
                  batch_size = 128,
                  activation = tf.nn.tanh,
-                 mc_samples = 1,
+                 mc_samples = 10,
                  constant_prior=False):
         
         # SIZES
@@ -54,7 +54,8 @@ class BayesianVAE(object):
         self.session = tf.Session()
         
         ## Builds whole computational graph with relevant quantities as part of the class
-        self.loss, self.kl, self.ell, self.layer_out = self.get_nelbo()
+        self.ell, self.layer_out, self.z_mu, self.z_log_sigma = self.get_ell()
+        self.loss, self.kl = self.get_nelbo()
 
     def add_weights(self, shape, bias_shape, name):
         
@@ -205,7 +206,7 @@ class BayesianVAE(object):
             # avg_out = tf.reduce_mean(outputs, 0)
 
             # return tf.reduce_mean(ll, 0), avg_out
-        return cum_ll / self.L, cum_out / self.L
+        return tf.reduce_mean(cum_ll / self.L), cum_out / self.L, z_mu, z_log_sigma
 
     def get_kl(self, layer_name):
         """
@@ -246,15 +247,25 @@ class BayesianVAE(object):
         
         return kl
     
+    def get_kl_z(self):
+        """
+        d_kl(q(z|x)||p(z)) returns the KL-divergence between the prior p and the variational posterior q.
+        :return: KL divergence between q and p
+        """
+        # Formula: 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
+        return - 0.5 * tf.reduce_sum( 1.0 + 2.0 * self.z_log_sigma - tf.square(self.z_mu) -
+                                   tf.exp(2.0 * self.z_log_sigma), 1)
+    
     def get_nelbo(self):
         """ Returns the negative ELBOW, which allows us to minimize instead of maximize. """
         # the kl does not change among samples
-        kl = self.get_kl_multi()
-        ell, layer_out = self.get_ell()
+        # kl = self.get_kl_multi()
+        kl = tf.reduce_mean(self.get_kl_z())
+        # ell, layer_out, z_mu, z_log_sigma = self.get_ell()
         # we take the mean instead of the sum to give it the same weight as for the KL-term
-        batch_ell = tf.reduce_mean(ell)
-        nelbo = kl - batch_ell # * self.N / float(self.M)
-        return nelbo, kl, batch_ell, layer_out
+        # batch_ell = tf.reduce_mean(self.ell)
+        nelbo = kl - self.ell # * self.N / float(self.M)
+        return nelbo, kl
     
     def learn(self, learning_rate=0.01, epochs=50):
         """ Our learning procedure """
@@ -266,9 +277,9 @@ class BayesianVAE(object):
         ## Define the optimizer
         train_step = optimizer.minimize(self.loss, var_list=all_variables)
 
-        tf.summary.scalar('negative_elbo', self.loss)
-        tf.summary.scalar('kl_div', self.kl)
-        tf.summary.scalar('ell', self.ell)
+        #tf.summary.scalar('negative_elbo', self.loss)
+        #tf.summary.scalar('kl_div', self.kl)
+        #tf.summary.scalar('ell', self.ell)
         
         merged = tf.summary.merge_all()
         
