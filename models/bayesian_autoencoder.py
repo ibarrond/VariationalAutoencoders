@@ -163,6 +163,7 @@ class BayesianAutoencoder(object):
 
                 if i == (w_off + self.length_decoder - 1):
                     net = tf.nn.sigmoid(net)
+                    # net = net
                 else:
                     net = tf.nn.tanh(net)
                 tf.summary.histogram('outputs_l_' + str(i-w_off), net)
@@ -186,9 +187,12 @@ class BayesianAutoencoder(object):
     
     """
     def get_ll(self, Y, output):
+        batch_size = tf.shape(Y)[0]
+        d_in = tf.shape(Y)[-1]
+        Y = tf.multiply(tf.ones([self.L, batch_size, d_in]), Y)
         return -tf.nn.sigmoid_cross_entropy_with_logits(labels=Y, logits=output)
-        
     """
+        
     def get_ll(self, target, output):
         return tf.reduce_sum(
             target * tf.log(output + 1e-10) + \
@@ -248,6 +252,7 @@ class BayesianAutoencoder(object):
         # the kl does not change among samples
         kl = self.get_kl_multi()
         ell = self.get_ell()
+        # batch_ell = tf.reduce_mean(tf.reduce_sum(ell, [-1]))
         batch_ell = tf.reduce_mean(ell)
         nelbo = kl - tf.reduce_sum(ell) * tf.cast(self.N, "float32") / batch_size
         # nelbo = -batch_ell
@@ -388,7 +393,7 @@ class BayesianAutoencoder(object):
         for img_i in np.linspace(min_val, max_val, n_examples):
             for img_j in np.linspace(min_val, max_val, n_examples):
                 z = np.array([[[img_i, img_j]]], dtype=np.float32)
-                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.L: 10, self.phase: False})
+                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.L: 1, self.phase: False})
                 images.append(np.reshape(recon, (1, 28, 28, 1)))
         images = np.concatenate(images)
         
