@@ -286,15 +286,15 @@ class BayesianVAEArtificial(object):
 
         ## Define the optimizer
         # train_step = optimizer.minimize(self.loss, var_list=all_variables)
-        gradients = optimizer.compute_gradients(self.loss)
+        # gradients = optimizer.compute_gradients(self.loss)
 
         def ClipIfNotNone(grad):
             if grad is None:
                 return grad
             return tf.clip_by_value(grad, -1, 1)
-        clipped_gradients = [(ClipIfNotNone(grad), var) for grad, var in gradients]
-        train_step = optimizer.apply_gradients(clipped_gradients)
-        # train_step = optimizer.minimize(self.loss, var_list=all_variables)
+        # clipped_gradients = [(ClipIfNotNone(grad), var) for grad, var in gradients]
+        # train_step = optimizer.apply_gradients(clipped_gradients)
+        train_step = optimizer.minimize(self.loss, var_list=all_variables)
 
         tf.summary.scalar('negative_elbo', self.loss)
         tf.summary.scalar('kl_div', self.kl)

@@ -49,9 +49,12 @@ class BayesianAutoencoder(object):
             mean = tf.constant(0.0, shape=shape)
             log_var = tf.constant(0.0, shape=shape)
         else:
-            mean = tf.Variable(tf.zeros(shape))
-            log_var = tf.Variable(tf.zeros(shape))
-            # mean = tf.Variable(tf.truncated_normal(shape, stddev=0.1))
+            # mean = tf.Variable(tf.zeros(shape))
+            # log_var = tf.Variable(tf.zeros(shape))
+            # xavier initialization
+            log_var = tf.Variable(tf.ones(shape)) * tf.log(2./(shape[-1] + shape[-2]))
+            # log_var = tf.Variable(tf.ones(shape)) * (-5)
+            mean = tf.Variable(tf.truncated_normal(shape, stddev=tf.sqrt(2./(shape[-1] + shape[-2]))))
             # log_var = tf.Variable(tf.truncated_normal(shape, stddev=0.1))
             
         tf.summary.histogram('mean', mean)
@@ -126,6 +129,7 @@ class BayesianAutoencoder(object):
         z = self.get_std_norm_samples([mc_samples, d_in, d_out])
         ## division by 2 to obtain pure standard deviation
         w_from_q = tf.add(tf.multiply(z, tf.exp(log_var_W / 2)), mean_W)
+        # w_from_q = tf.add(tf.multiply(z, 1.0), mean_W)
 
         return w_from_q
     
@@ -258,7 +262,7 @@ class BayesianAutoencoder(object):
         # nelbo = -batch_ell
         return nelbo, kl, batch_ell
     
-    def learn(self, learning_rate=0.01, epochs=50, batch_size=128):
+    def learn(self, learning_rate=0.01, epochs=50, batch_size=128, mc_samples=10):
         """ Our learning procedure """
         optimizer = tf.train.AdamOptimizer(learning_rate)
 
@@ -266,15 +270,15 @@ class BayesianAutoencoder(object):
         all_variables = tf.trainable_variables()
 
         ## Define the optimizer
-        # train_step = optimizer.minimize(self.loss, var_list=all_variables)
-        gradients = optimizer.compute_gradients(self.loss)
+        train_step = optimizer.minimize(self.loss, var_list=all_variables)
+        # gradients = optimizer.compute_gradients(self.loss)
 
         def ClipIfNotNone(grad):
             if grad is None:
                 return grad
             return tf.clip_by_value(grad, -1, 1)
-        clipped_gradients = [(ClipIfNotNone(grad), var) for grad, var in gradients]
-        train_step = optimizer.apply_gradients(clipped_gradients)
+        # clipped_gradients = [(ClipIfNotNone(grad), var) for grad, var in gradients]
+        # train_step = optimizer.apply_gradients(clipped_gradients)
         # train_step = optimizer.minimize(self.loss, var_list=all_variables)
 
         tf.summary.scalar('negative_elbo', self.loss)
@@ -311,7 +315,7 @@ class BayesianAutoencoder(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.L: 10, self.N: mnist.train.num_examples, self.phase: True})
+                    feed_dict={self.X: batch_xs, self.L: mc_samples, self.N: mnist.train.num_examples, self.phase: True})
                 train_writer.add_summary(summary, i)
                 train_cost += loss/num_batches
                 cum_ell += ell/num_batches
