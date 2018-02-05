@@ -1,0 +1,20 @@
+Epoch: 0, iteration: 50
+Autoencoder Loss: nan
+Discriminator Loss: 2.3772010803222656
+Generator Loss: 0.19356338679790497
+Epoch: 0, iteration: 100
+Autoencoder Loss: 625.7078247070312
+Discriminator Loss: 0.6301282644271851
+Generator Loss: 0.7994359731674194
+Epoch: 0, iteration: 150
+Autoencoder Loss: 623.4758911132812
+Discriminator Loss: 0.1688411831855774
+Generator Loss: 2.0247738361358643
+Epoch: 0, iteration: 200
+Autoencoder Loss: 593.17138671875
+Discriminator Loss: 0.03033854067325592
+Generator Loss: 4.36665153503418
+Epoch: 0, iteration: 250
+Autoencoder Loss: 568.195556640625
+Discriminator Loss: 0.016966603696346283
+Generator Loss: 5.190488815307617

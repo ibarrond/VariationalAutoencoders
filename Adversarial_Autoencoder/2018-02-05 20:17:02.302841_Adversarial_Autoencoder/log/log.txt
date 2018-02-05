@@ -1,0 +1,1600 @@
+Epoch: 0, iteration: 50
+Autoencoder Loss: 214.41921997070312
+Discriminator Loss: 1.35947585105896
+Generator Loss: 0.5429439544677734
+Epoch: 0, iteration: 100
+Autoencoder Loss: 204.1774444580078
+Discriminator Loss: 1.436282992362976
+Generator Loss: 0.5172145962715149
+Epoch: 0, iteration: 150
+Autoencoder Loss: 197.16128540039062
+Discriminator Loss: 1.382382869720459
+Generator Loss: 0.5232954025268555
+Epoch: 0, iteration: 200
+Autoencoder Loss: 200.90234375
+Discriminator Loss: 1.316526174545288
+Generator Loss: 0.6094015836715698
+Epoch: 0, iteration: 250
+Autoencoder Loss: 195.52667236328125
+Discriminator Loss: 1.2032088041305542
+Generator Loss: 0.6706587076187134
+Epoch: 0, iteration: 300
+Autoencoder Loss: 189.3990478515625
+Discriminator Loss: 1.3230175971984863
+Generator Loss: 0.6037940979003906
+Epoch: 0, iteration: 350
+Autoencoder Loss: 191.92971801757812
+Discriminator Loss: 1.245138168334961
+Generator Loss: 0.6545206308364868
+Epoch: 0, iteration: 400
+Autoencoder Loss: 198.79562377929688
+Discriminator Loss: 1.213757872581482
+Generator Loss: 0.6525101661682129
+Epoch: 1, iteration: 50
+Autoencoder Loss: 186.6627960205078
+Discriminator Loss: 1.2655271291732788
+Generator Loss: 0.5989110469818115
+Epoch: 1, iteration: 100
+Autoencoder Loss: 184.30213928222656
+Discriminator Loss: 1.286001443862915
+Generator Loss: 0.6188296675682068
+Epoch: 1, iteration: 150
+Autoencoder Loss: 190.74388122558594
+Discriminator Loss: 1.3644014596939087
+Generator Loss: 0.589043140411377
+Epoch: 1, iteration: 200
+Autoencoder Loss: 177.1593780517578
+Discriminator Loss: 1.352586269378662
+Generator Loss: 0.5735336542129517
+Epoch: 1, iteration: 250
+Autoencoder Loss: 172.25579833984375
+Discriminator Loss: 1.4188377857208252
+Generator Loss: 0.5541242361068726
+Epoch: 1, iteration: 300
+Autoencoder Loss: 175.58261108398438
+Discriminator Loss: 1.429552435874939
+Generator Loss: 0.5546160340309143
+Epoch: 1, iteration: 350
+Autoencoder Loss: 167.38986206054688
+Discriminator Loss: 1.4284868240356445
+Generator Loss: 0.5762617588043213
+Epoch: 1, iteration: 400
+Autoencoder Loss: 176.25640869140625
+Discriminator Loss: 1.414238691329956
+Generator Loss: 0.5969306230545044
+Epoch: 2, iteration: 50
+Autoencoder Loss: 163.9434814453125
+Discriminator Loss: 1.3905918598175049
+Generator Loss: 0.6121917963027954
+Epoch: 2, iteration: 100
+Autoencoder Loss: 168.63595581054688
+Discriminator Loss: 1.3925350904464722
+Generator Loss: 0.6080029010772705
+Epoch: 2, iteration: 150
+Autoencoder Loss: 160.11843872070312
+Discriminator Loss: 1.4205386638641357
+Generator Loss: 0.598684549331665
+Epoch: 2, iteration: 200
+Autoencoder Loss: 161.90106201171875
+Discriminator Loss: 1.4001201391220093
+Generator Loss: 0.6136205196380615
+Epoch: 2, iteration: 250
+Autoencoder Loss: 159.51882934570312
+Discriminator Loss: 1.3943544626235962
+Generator Loss: 0.6266118288040161
+Epoch: 2, iteration: 300
+Autoencoder Loss: 160.00405883789062
+Discriminator Loss: 1.390146255493164
+Generator Loss: 0.6318312883377075
+Epoch: 2, iteration: 350
+Autoencoder Loss: 167.79417419433594
+Discriminator Loss: 1.3908782005310059
+Generator Loss: 0.6134357452392578
+Epoch: 2, iteration: 400
+Autoencoder Loss: 156.90977478027344
+Discriminator Loss: 1.411139726638794
+Generator Loss: 0.6144678592681885
+Epoch: 3, iteration: 50
+Autoencoder Loss: 158.34268188476562
+Discriminator Loss: 1.4058315753936768
+Generator Loss: 0.614730954170227
+Epoch: 3, iteration: 100
+Autoencoder Loss: 156.75283813476562
+Discriminator Loss: 1.4093079566955566
+Generator Loss: 0.6169001460075378
+Epoch: 3, iteration: 150
+Autoencoder Loss: 159.171630859375
+Discriminator Loss: 1.4289684295654297
+Generator Loss: 0.623754620552063
+Epoch: 3, iteration: 200
+Autoencoder Loss: 152.92031860351562
+Discriminator Loss: 1.3985323905944824
+Generator Loss: 0.6277230978012085
+Epoch: 3, iteration: 250
+Autoencoder Loss: 157.73513793945312
+Discriminator Loss: 1.4116438627243042
+Generator Loss: 0.6354976892471313
+Epoch: 3, iteration: 300
+Autoencoder Loss: 160.40061950683594
+Discriminator Loss: 1.3965195417404175
+Generator Loss: 0.6506823301315308
+Epoch: 3, iteration: 350
+Autoencoder Loss: 154.57981872558594
+Discriminator Loss: 1.419999122619629
+Generator Loss: 0.6383421421051025
+Epoch: 3, iteration: 400
+Autoencoder Loss: 156.38623046875
+Discriminator Loss: 1.4107730388641357
+Generator Loss: 0.65117347240448
+Epoch: 4, iteration: 50
+Autoencoder Loss: 156.51905822753906
+Discriminator Loss: 1.3940744400024414
+Generator Loss: 0.6521018147468567
+Epoch: 4, iteration: 100
+Autoencoder Loss: 153.9954071044922
+Discriminator Loss: 1.4026715755462646
+Generator Loss: 0.6633020639419556
+Epoch: 4, iteration: 150
+Autoencoder Loss: 149.33438110351562
+Discriminator Loss: 1.397017002105713
+Generator Loss: 0.6635589599609375
+Epoch: 4, iteration: 200
+Autoencoder Loss: 153.0599365234375
+Discriminator Loss: 1.3895866870880127
+Generator Loss: 0.6741916537284851
+Epoch: 4, iteration: 250
+Autoencoder Loss: 147.98797607421875
+Discriminator Loss: 1.3843770027160645
+Generator Loss: 0.6899243593215942
+Epoch: 4, iteration: 300
+Autoencoder Loss: 149.30088806152344
+Discriminator Loss: 1.3839821815490723
+Generator Loss: 0.68773353099823
+Epoch: 4, iteration: 350
+Autoencoder Loss: 147.7593231201172
+Discriminator Loss: 1.3835340738296509
+Generator Loss: 0.6836962103843689
+Epoch: 4, iteration: 400
+Autoencoder Loss: 149.78985595703125
+Discriminator Loss: 1.3964060544967651
+Generator Loss: 0.6796194314956665
+Epoch: 5, iteration: 50
+Autoencoder Loss: 149.54774475097656
+Discriminator Loss: 1.3902020454406738
+Generator Loss: 0.6875766515731812
+Epoch: 5, iteration: 100
+Autoencoder Loss: 154.29505920410156
+Discriminator Loss: 1.38785719871521
+Generator Loss: 0.6885443925857544
+Epoch: 5, iteration: 150
+Autoencoder Loss: 146.09930419921875
+Discriminator Loss: 1.387836217880249
+Generator Loss: 0.685908317565918
+Epoch: 5, iteration: 200
+Autoencoder Loss: 138.45968627929688
+Discriminator Loss: 1.3922367095947266
+Generator Loss: 0.6827242374420166
+Epoch: 5, iteration: 250
+Autoencoder Loss: 145.95761108398438
+Discriminator Loss: 1.3882579803466797
+Generator Loss: 0.6967353820800781
+Epoch: 5, iteration: 300
+Autoencoder Loss: 144.01901245117188
+Discriminator Loss: 1.3884148597717285
+Generator Loss: 0.6792633533477783
+Epoch: 5, iteration: 350
+Autoencoder Loss: 154.26846313476562
+Discriminator Loss: 1.3889312744140625
+Generator Loss: 0.6915407180786133
+Epoch: 5, iteration: 400
+Autoencoder Loss: 152.09732055664062
+Discriminator Loss: 1.387844204902649
+Generator Loss: 0.7017664909362793
+Epoch: 6, iteration: 50
+Autoencoder Loss: 144.6898193359375
+Discriminator Loss: 1.3908308744430542
+Generator Loss: 0.6929283142089844
+Epoch: 6, iteration: 100
+Autoencoder Loss: 145.23306274414062
+Discriminator Loss: 1.3872747421264648
+Generator Loss: 0.6948575973510742
+Epoch: 6, iteration: 150
+Autoencoder Loss: 143.57679748535156
+Discriminator Loss: 1.3911914825439453
+Generator Loss: 0.6903877258300781
+Epoch: 6, iteration: 200
+Autoencoder Loss: 138.9149169921875
+Discriminator Loss: 1.3831721544265747
+Generator Loss: 0.6950766444206238
+Epoch: 6, iteration: 250
+Autoencoder Loss: 142.79837036132812
+Discriminator Loss: 1.3897554874420166
+Generator Loss: 0.6862695813179016
+Epoch: 6, iteration: 300
+Autoencoder Loss: 141.85757446289062
+Discriminator Loss: 1.3901833295822144
+Generator Loss: 0.7017982602119446
+Epoch: 6, iteration: 350
+Autoencoder Loss: 143.74908447265625
+Discriminator Loss: 1.3929152488708496
+Generator Loss: 0.6868221759796143
+Epoch: 6, iteration: 400
+Autoencoder Loss: 142.76988220214844
+Discriminator Loss: 1.3846663236618042
+Generator Loss: 0.6958361864089966
+Epoch: 7, iteration: 50
+Autoencoder Loss: 143.1197509765625
+Discriminator Loss: 1.3894553184509277
+Generator Loss: 0.6922340393066406
+Epoch: 7, iteration: 100
+Autoencoder Loss: 144.34605407714844
+Discriminator Loss: 1.3856688737869263
+Generator Loss: 0.6927410960197449
+Epoch: 7, iteration: 150
+Autoencoder Loss: 143.0511474609375
+Discriminator Loss: 1.3848764896392822
+Generator Loss: 0.6959303617477417
+Epoch: 7, iteration: 200
+Autoencoder Loss: 146.14266967773438
+Discriminator Loss: 1.3871898651123047
+Generator Loss: 0.6971181631088257
+Epoch: 7, iteration: 250
+Autoencoder Loss: 140.64993286132812
+Discriminator Loss: 1.3853362798690796
+Generator Loss: 0.6901302337646484
+Epoch: 7, iteration: 300
+Autoencoder Loss: 148.61114501953125
+Discriminator Loss: 1.379420280456543
+Generator Loss: 0.6986660361289978
+Epoch: 7, iteration: 350
+Autoencoder Loss: 146.7638702392578
+Discriminator Loss: 1.3812382221221924
+Generator Loss: 0.6997618675231934
+Epoch: 7, iteration: 400
+Autoencoder Loss: 142.08102416992188
+Discriminator Loss: 1.3801099061965942
+Generator Loss: 0.6944050788879395
+Epoch: 8, iteration: 50
+Autoencoder Loss: 142.43408203125
+Discriminator Loss: 1.389371633529663
+Generator Loss: 0.6962909698486328
+Epoch: 8, iteration: 100
+Autoencoder Loss: 144.20513916015625
+Discriminator Loss: 1.3861384391784668
+Generator Loss: 0.6950040459632874
+Epoch: 8, iteration: 150
+Autoencoder Loss: 144.65618896484375
+Discriminator Loss: 1.3874824047088623
+Generator Loss: 0.6935083866119385
+Epoch: 8, iteration: 200
+Autoencoder Loss: 137.02899169921875
+Discriminator Loss: 1.383770227432251
+Generator Loss: 0.6972816586494446
+Epoch: 8, iteration: 250
+Autoencoder Loss: 141.45358276367188
+Discriminator Loss: 1.3908523321151733
+Generator Loss: 0.6906071901321411
+Epoch: 8, iteration: 300
+Autoencoder Loss: 146.71688842773438
+Discriminator Loss: 1.3915247917175293
+Generator Loss: 0.6866897940635681
+Epoch: 8, iteration: 350
+Autoencoder Loss: 141.8572998046875
+Discriminator Loss: 1.4112727642059326
+Generator Loss: 0.6802951097488403
+Epoch: 8, iteration: 400
+Autoencoder Loss: 146.363037109375
+Discriminator Loss: 1.382502794265747
+Generator Loss: 0.6977151036262512
+Epoch: 9, iteration: 50
+Autoencoder Loss: 141.29766845703125
+Discriminator Loss: 1.387781023979187
+Generator Loss: 0.6881030201911926
+Epoch: 9, iteration: 100
+Autoencoder Loss: 148.32315063476562
+Discriminator Loss: 1.3927454948425293
+Generator Loss: 0.6900521516799927
+Epoch: 9, iteration: 150
+Autoencoder Loss: 135.11517333984375
+Discriminator Loss: 1.384939432144165
+Generator Loss: 0.6949266195297241
+Epoch: 9, iteration: 200
+Autoencoder Loss: 140.0270538330078
+Discriminator Loss: 1.3868310451507568
+Generator Loss: 0.6897504329681396
+Epoch: 9, iteration: 250
+Autoencoder Loss: 137.0185089111328
+Discriminator Loss: 1.3806073665618896
+Generator Loss: 0.6979890465736389
+Epoch: 9, iteration: 300
+Autoencoder Loss: 147.84100341796875
+Discriminator Loss: 1.39054536819458
+Generator Loss: 0.6927924752235413
+Epoch: 9, iteration: 350
+Autoencoder Loss: 136.23158264160156
+Discriminator Loss: 1.3871984481811523
+Generator Loss: 0.6937952041625977
+Epoch: 9, iteration: 400
+Autoencoder Loss: 139.8487091064453
+Discriminator Loss: 1.3877208232879639
+Generator Loss: 0.6857342720031738
+Epoch: 10, iteration: 50
+Autoencoder Loss: 144.8035888671875
+Discriminator Loss: 1.38972806930542
+Generator Loss: 0.6889446973800659
+Epoch: 10, iteration: 100
+Autoencoder Loss: 144.24005126953125
+Discriminator Loss: 1.3940730094909668
+Generator Loss: 0.6948785781860352
+Epoch: 10, iteration: 150
+Autoencoder Loss: 144.82318115234375
+Discriminator Loss: 1.3795697689056396
+Generator Loss: 0.6985310912132263
+Epoch: 10, iteration: 200
+Autoencoder Loss: 140.75807189941406
+Discriminator Loss: 1.3862042427062988
+Generator Loss: 0.6993969082832336
+Epoch: 10, iteration: 250
+Autoencoder Loss: 135.37451171875
+Discriminator Loss: 1.3817017078399658
+Generator Loss: 0.7010126113891602
+Epoch: 10, iteration: 300
+Autoencoder Loss: 141.55963134765625
+Discriminator Loss: 1.3860719203948975
+Generator Loss: 0.6952755451202393
+Epoch: 10, iteration: 350
+Autoencoder Loss: 139.2064208984375
+Discriminator Loss: 1.3894412517547607
+Generator Loss: 0.6879664659500122
+Epoch: 10, iteration: 400
+Autoencoder Loss: 141.58062744140625
+Discriminator Loss: 1.3873958587646484
+Generator Loss: 0.6937612295150757
+Epoch: 11, iteration: 50
+Autoencoder Loss: 147.14505004882812
+Discriminator Loss: 1.3846195936203003
+Generator Loss: 0.6898295879364014
+Epoch: 11, iteration: 100
+Autoencoder Loss: 143.9256134033203
+Discriminator Loss: 1.394577980041504
+Generator Loss: 0.6940367817878723
+Epoch: 11, iteration: 150
+Autoencoder Loss: 147.04638671875
+Discriminator Loss: 1.3938831090927124
+Generator Loss: 0.6918483376502991
+Epoch: 11, iteration: 200
+Autoencoder Loss: 141.12652587890625
+Discriminator Loss: 1.3878555297851562
+Generator Loss: 0.6938609480857849
+Epoch: 11, iteration: 250
+Autoencoder Loss: 139.22824096679688
+Discriminator Loss: 1.3922971487045288
+Generator Loss: 0.68906170129776
+Epoch: 11, iteration: 300
+Autoencoder Loss: 136.63009643554688
+Discriminator Loss: 1.3855876922607422
+Generator Loss: 0.6995373964309692
+Epoch: 11, iteration: 350
+Autoencoder Loss: 137.01478576660156
+Discriminator Loss: 1.3868627548217773
+Generator Loss: 0.6967986226081848
+Epoch: 11, iteration: 400
+Autoencoder Loss: 141.02105712890625
+Discriminator Loss: 1.382613182067871
+Generator Loss: 0.7050604820251465
+Epoch: 12, iteration: 50
+Autoencoder Loss: 138.97836303710938
+Discriminator Loss: 1.3756818771362305
+Generator Loss: 0.6964848041534424
+Epoch: 12, iteration: 100
+Autoencoder Loss: 143.4320831298828
+Discriminator Loss: 1.386814832687378
+Generator Loss: 0.690802812576294
+Epoch: 12, iteration: 150
+Autoencoder Loss: 142.7455596923828
+Discriminator Loss: 1.402169942855835
+Generator Loss: 0.6917902231216431
+Epoch: 12, iteration: 200
+Autoencoder Loss: 137.59405517578125
+Discriminator Loss: 1.3968226909637451
+Generator Loss: 0.6869305372238159
+Epoch: 12, iteration: 250
+Autoencoder Loss: 137.77078247070312
+Discriminator Loss: 1.3881001472473145
+Generator Loss: 0.6930907964706421
+Epoch: 12, iteration: 300
+Autoencoder Loss: 130.53851318359375
+Discriminator Loss: 1.3863215446472168
+Generator Loss: 0.6960328817367554
+Epoch: 12, iteration: 350
+Autoencoder Loss: 143.94869995117188
+Discriminator Loss: 1.3966256380081177
+Generator Loss: 0.6859699487686157
+Epoch: 12, iteration: 400
+Autoencoder Loss: 129.12814331054688
+Discriminator Loss: 1.3794498443603516
+Generator Loss: 0.7043484449386597
+Epoch: 13, iteration: 50
+Autoencoder Loss: 141.61158752441406
+Discriminator Loss: 1.3951085805892944
+Generator Loss: 0.6969325542449951
+Epoch: 13, iteration: 100
+Autoencoder Loss: 140.34825134277344
+Discriminator Loss: 1.3861466646194458
+Generator Loss: 0.694797933101654
+Epoch: 13, iteration: 150
+Autoencoder Loss: 132.21688842773438
+Discriminator Loss: 1.3941051959991455
+Generator Loss: 0.689385175704956
+Epoch: 13, iteration: 200
+Autoencoder Loss: 136.31619262695312
+Discriminator Loss: 1.387441635131836
+Generator Loss: 0.6936911344528198
+Epoch: 13, iteration: 250
+Autoencoder Loss: 136.43856811523438
+Discriminator Loss: 1.3933367729187012
+Generator Loss: 0.6886157989501953
+Epoch: 13, iteration: 300
+Autoencoder Loss: 142.86839294433594
+Discriminator Loss: 1.386462688446045
+Generator Loss: 0.6893799901008606
+Epoch: 13, iteration: 350
+Autoencoder Loss: 139.72830200195312
+Discriminator Loss: 1.3863286972045898
+Generator Loss: 0.6965311765670776
+Epoch: 13, iteration: 400
+Autoencoder Loss: 139.18380737304688
+Discriminator Loss: 1.3895354270935059
+Generator Loss: 0.6899420619010925
+Epoch: 14, iteration: 50
+Autoencoder Loss: 140.5368194580078
+Discriminator Loss: 1.3993494510650635
+Generator Loss: 0.6846012473106384
+Epoch: 14, iteration: 100
+Autoencoder Loss: 147.32125854492188
+Discriminator Loss: 1.3962445259094238
+Generator Loss: 0.683305025100708
+Epoch: 14, iteration: 150
+Autoencoder Loss: 136.03407287597656
+Discriminator Loss: 1.3881433010101318
+Generator Loss: 0.6911317706108093
+Epoch: 14, iteration: 200
+Autoencoder Loss: 137.5568084716797
+Discriminator Loss: 1.379406213760376
+Generator Loss: 0.6989508867263794
+Epoch: 14, iteration: 250
+Autoencoder Loss: 143.46099853515625
+Discriminator Loss: 1.4013111591339111
+Generator Loss: 0.6912935972213745
+Epoch: 14, iteration: 300
+Autoencoder Loss: 141.29588317871094
+Discriminator Loss: 1.3932628631591797
+Generator Loss: 0.6919831037521362
+Epoch: 14, iteration: 350
+Autoencoder Loss: 138.39187622070312
+Discriminator Loss: 1.3815640211105347
+Generator Loss: 0.6947566866874695
+Epoch: 14, iteration: 400
+Autoencoder Loss: 135.75015258789062
+Discriminator Loss: 1.3887035846710205
+Generator Loss: 0.6879576444625854
+Epoch: 15, iteration: 50
+Autoencoder Loss: 145.942626953125
+Discriminator Loss: 1.3948044776916504
+Generator Loss: 0.686867892742157
+Epoch: 15, iteration: 100
+Autoencoder Loss: 133.6246337890625
+Discriminator Loss: 1.392849087715149
+Generator Loss: 0.6970183849334717
+Epoch: 15, iteration: 150
+Autoencoder Loss: 142.8011474609375
+Discriminator Loss: 1.3857965469360352
+Generator Loss: 0.6918336153030396
+Epoch: 15, iteration: 200
+Autoencoder Loss: 138.78201293945312
+Discriminator Loss: 1.3915581703186035
+Generator Loss: 0.6898228526115417
+Epoch: 15, iteration: 250
+Autoencoder Loss: 140.1021728515625
+Discriminator Loss: 1.3947073221206665
+Generator Loss: 0.6845577359199524
+Epoch: 15, iteration: 300
+Autoencoder Loss: 142.47555541992188
+Discriminator Loss: 1.3922617435455322
+Generator Loss: 0.6931643486022949
+Epoch: 15, iteration: 350
+Autoencoder Loss: 138.23309326171875
+Discriminator Loss: 1.3863942623138428
+Generator Loss: 0.6957392692565918
+Epoch: 15, iteration: 400
+Autoencoder Loss: 132.90219116210938
+Discriminator Loss: 1.3951544761657715
+Generator Loss: 0.6876929998397827
+Epoch: 16, iteration: 50
+Autoencoder Loss: 143.9075469970703
+Discriminator Loss: 1.387105941772461
+Generator Loss: 0.6923288106918335
+Epoch: 16, iteration: 100
+Autoencoder Loss: 140.14187622070312
+Discriminator Loss: 1.3857779502868652
+Generator Loss: 0.6910587549209595
+Epoch: 16, iteration: 150
+Autoencoder Loss: 135.92135620117188
+Discriminator Loss: 1.3891587257385254
+Generator Loss: 0.692755937576294
+Epoch: 16, iteration: 200
+Autoencoder Loss: 131.353271484375
+Discriminator Loss: 1.3877760171890259
+Generator Loss: 0.6911606788635254
+Epoch: 16, iteration: 250
+Autoencoder Loss: 136.9235382080078
+Discriminator Loss: 1.3901242017745972
+Generator Loss: 0.691213846206665
+Epoch: 16, iteration: 300
+Autoencoder Loss: 138.80813598632812
+Discriminator Loss: 1.3866562843322754
+Generator Loss: 0.691615104675293
+Epoch: 16, iteration: 350
+Autoencoder Loss: 132.6928253173828
+Discriminator Loss: 1.3835034370422363
+Generator Loss: 0.6946066617965698
+Epoch: 16, iteration: 400
+Autoencoder Loss: 145.00717163085938
+Discriminator Loss: 1.3858051300048828
+Generator Loss: 0.693881094455719
+Epoch: 17, iteration: 50
+Autoencoder Loss: 135.05615234375
+Discriminator Loss: 1.3795486688613892
+Generator Loss: 0.7005286812782288
+Epoch: 17, iteration: 100
+Autoencoder Loss: 143.8798065185547
+Discriminator Loss: 1.3881874084472656
+Generator Loss: 0.6923627853393555
+Epoch: 17, iteration: 150
+Autoencoder Loss: 146.38613891601562
+Discriminator Loss: 1.3876457214355469
+Generator Loss: 0.6915102005004883
+Epoch: 17, iteration: 200
+Autoencoder Loss: 137.7576141357422
+Discriminator Loss: 1.3929195404052734
+Generator Loss: 0.6900770664215088
+Epoch: 17, iteration: 250
+Autoencoder Loss: 143.16311645507812
+Discriminator Loss: 1.3902840614318848
+Generator Loss: 0.6941490173339844
+Epoch: 17, iteration: 300
+Autoencoder Loss: 138.75765991210938
+Discriminator Loss: 1.4023337364196777
+Generator Loss: 0.6891416311264038
+Epoch: 17, iteration: 350
+Autoencoder Loss: 133.177734375
+Discriminator Loss: 1.3878252506256104
+Generator Loss: 0.6975385546684265
+Epoch: 17, iteration: 400
+Autoencoder Loss: 142.22308349609375
+Discriminator Loss: 1.3876729011535645
+Generator Loss: 0.6962733864784241
+Epoch: 18, iteration: 50
+Autoencoder Loss: 140.69940185546875
+Discriminator Loss: 1.3857614994049072
+Generator Loss: 0.7010055184364319
+Epoch: 18, iteration: 100
+Autoencoder Loss: 137.28427124023438
+Discriminator Loss: 1.3832789659500122
+Generator Loss: 0.6969863176345825
+Epoch: 18, iteration: 150
+Autoencoder Loss: 137.052734375
+Discriminator Loss: 1.3846266269683838
+Generator Loss: 0.690677285194397
+Epoch: 18, iteration: 200
+Autoencoder Loss: 141.28024291992188
+Discriminator Loss: 1.3888728618621826
+Generator Loss: 0.6972769498825073
+Epoch: 18, iteration: 250
+Autoencoder Loss: 134.2532196044922
+Discriminator Loss: 1.3905969858169556
+Generator Loss: 0.6917620897293091
+Epoch: 18, iteration: 300
+Autoencoder Loss: 134.88436889648438
+Discriminator Loss: 1.3830599784851074
+Generator Loss: 0.6947309970855713
+Epoch: 18, iteration: 350
+Autoencoder Loss: 132.87966918945312
+Discriminator Loss: 1.392338752746582
+Generator Loss: 0.6937142610549927
+Epoch: 18, iteration: 400
+Autoencoder Loss: 140.85455322265625
+Discriminator Loss: 1.3896856307983398
+Generator Loss: 0.6882630586624146
+Epoch: 19, iteration: 50
+Autoencoder Loss: 142.592041015625
+Discriminator Loss: 1.3918659687042236
+Generator Loss: 0.6885182857513428
+Epoch: 19, iteration: 100
+Autoencoder Loss: 141.32264709472656
+Discriminator Loss: 1.3873791694641113
+Generator Loss: 0.6941075921058655
+Epoch: 19, iteration: 150
+Autoencoder Loss: 129.63763427734375
+Discriminator Loss: 1.3840882778167725
+Generator Loss: 0.6905760765075684
+Epoch: 19, iteration: 200
+Autoencoder Loss: 135.89727783203125
+Discriminator Loss: 1.385199785232544
+Generator Loss: 0.6913948655128479
+Epoch: 19, iteration: 250
+Autoencoder Loss: 130.95420837402344
+Discriminator Loss: 1.3848176002502441
+Generator Loss: 0.6932857632637024
+Epoch: 19, iteration: 300
+Autoencoder Loss: 131.15318298339844
+Discriminator Loss: 1.388620138168335
+Generator Loss: 0.692894697189331
+Epoch: 19, iteration: 350
+Autoencoder Loss: 135.61070251464844
+Discriminator Loss: 1.3885915279388428
+Generator Loss: 0.694774866104126
+Epoch: 19, iteration: 400
+Autoencoder Loss: 147.37046813964844
+Discriminator Loss: 1.3932421207427979
+Generator Loss: 0.6868801116943359
+Epoch: 20, iteration: 50
+Autoencoder Loss: 137.41448974609375
+Discriminator Loss: 1.386847734451294
+Generator Loss: 0.6927148103713989
+Epoch: 20, iteration: 100
+Autoencoder Loss: 138.294189453125
+Discriminator Loss: 1.3881890773773193
+Generator Loss: 0.6917126178741455
+Epoch: 20, iteration: 150
+Autoencoder Loss: 131.58700561523438
+Discriminator Loss: 1.3839489221572876
+Generator Loss: 0.6943169832229614
+Epoch: 20, iteration: 200
+Autoencoder Loss: 131.94174194335938
+Discriminator Loss: 1.3789606094360352
+Generator Loss: 0.6966468691825867
+Epoch: 20, iteration: 250
+Autoencoder Loss: 134.93084716796875
+Discriminator Loss: 1.3997383117675781
+Generator Loss: 0.6853044033050537
+Epoch: 20, iteration: 300
+Autoencoder Loss: 141.20046997070312
+Discriminator Loss: 1.3983738422393799
+Generator Loss: 0.6932681798934937
+Epoch: 20, iteration: 350
+Autoencoder Loss: 133.56692504882812
+Discriminator Loss: 1.3864198923110962
+Generator Loss: 0.694859504699707
+Epoch: 20, iteration: 400
+Autoencoder Loss: 135.2548065185547
+Discriminator Loss: 1.3819255828857422
+Generator Loss: 0.7000114321708679
+Epoch: 21, iteration: 50
+Autoencoder Loss: 139.45233154296875
+Discriminator Loss: 1.3939731121063232
+Generator Loss: 0.6893595457077026
+Epoch: 21, iteration: 100
+Autoencoder Loss: 137.76364135742188
+Discriminator Loss: 1.3861218690872192
+Generator Loss: 0.690468430519104
+Epoch: 21, iteration: 150
+Autoencoder Loss: 142.988525390625
+Discriminator Loss: 1.3897559642791748
+Generator Loss: 0.689240038394928
+Epoch: 21, iteration: 200
+Autoencoder Loss: 135.33090209960938
+Discriminator Loss: 1.3868354558944702
+Generator Loss: 0.6928368806838989
+Epoch: 21, iteration: 250
+Autoencoder Loss: 132.8443603515625
+Discriminator Loss: 1.3855910301208496
+Generator Loss: 0.6924633979797363
+Epoch: 21, iteration: 300
+Autoencoder Loss: 137.24905395507812
+Discriminator Loss: 1.387102723121643
+Generator Loss: 0.6929904222488403
+Epoch: 21, iteration: 350
+Autoencoder Loss: 132.20346069335938
+Discriminator Loss: 1.3888378143310547
+Generator Loss: 0.6885544061660767
+Epoch: 21, iteration: 400
+Autoencoder Loss: 133.69065856933594
+Discriminator Loss: 1.3857529163360596
+Generator Loss: 0.6958768367767334
+Epoch: 22, iteration: 50
+Autoencoder Loss: 127.61443328857422
+Discriminator Loss: 1.391191005706787
+Generator Loss: 0.6882333755493164
+Epoch: 22, iteration: 100
+Autoencoder Loss: 139.22479248046875
+Discriminator Loss: 1.3865153789520264
+Generator Loss: 0.6926902532577515
+Epoch: 22, iteration: 150
+Autoencoder Loss: 139.5023193359375
+Discriminator Loss: 1.3910126686096191
+Generator Loss: 0.6940662860870361
+Epoch: 22, iteration: 200
+Autoencoder Loss: 139.16017150878906
+Discriminator Loss: 1.3881261348724365
+Generator Loss: 0.6913068294525146
+Epoch: 22, iteration: 250
+Autoencoder Loss: 143.32254028320312
+Discriminator Loss: 1.3900024890899658
+Generator Loss: 0.6958514451980591
+Epoch: 22, iteration: 300
+Autoencoder Loss: 141.39892578125
+Discriminator Loss: 1.38914954662323
+Generator Loss: 0.6881104707717896
+Epoch: 22, iteration: 350
+Autoencoder Loss: 142.3266143798828
+Discriminator Loss: 1.3912999629974365
+Generator Loss: 0.6929964423179626
+Epoch: 22, iteration: 400
+Autoencoder Loss: 141.1316375732422
+Discriminator Loss: 1.3884462118148804
+Generator Loss: 0.6955815553665161
+Epoch: 23, iteration: 50
+Autoencoder Loss: 136.25372314453125
+Discriminator Loss: 1.3879539966583252
+Generator Loss: 0.6891052722930908
+Epoch: 23, iteration: 100
+Autoencoder Loss: 133.4315185546875
+Discriminator Loss: 1.3910408020019531
+Generator Loss: 0.6916407942771912
+Epoch: 23, iteration: 150
+Autoencoder Loss: 130.35316467285156
+Discriminator Loss: 1.386683702468872
+Generator Loss: 0.6946583986282349
+Epoch: 23, iteration: 200
+Autoencoder Loss: 130.48098754882812
+Discriminator Loss: 1.3870983123779297
+Generator Loss: 0.69282466173172
+Epoch: 23, iteration: 250
+Autoencoder Loss: 133.9094696044922
+Discriminator Loss: 1.3847975730895996
+Generator Loss: 0.6947208046913147
+Epoch: 23, iteration: 300
+Autoencoder Loss: 143.47772216796875
+Discriminator Loss: 1.3807060718536377
+Generator Loss: 0.6967147588729858
+Epoch: 23, iteration: 350
+Autoencoder Loss: 148.87538146972656
+Discriminator Loss: 1.3915773630142212
+Generator Loss: 0.6986197233200073
+Epoch: 23, iteration: 400
+Autoencoder Loss: 139.1375732421875
+Discriminator Loss: 1.3884246349334717
+Generator Loss: 0.6933679580688477
+Epoch: 24, iteration: 50
+Autoencoder Loss: 134.86724853515625
+Discriminator Loss: 1.3900054693222046
+Generator Loss: 0.690489649772644
+Epoch: 24, iteration: 100
+Autoencoder Loss: 136.03225708007812
+Discriminator Loss: 1.4022953510284424
+Generator Loss: 0.6972036957740784
+Epoch: 24, iteration: 150
+Autoencoder Loss: 152.70404052734375
+Discriminator Loss: 1.387171983718872
+Generator Loss: 0.6927214860916138
+Epoch: 24, iteration: 200
+Autoencoder Loss: 149.4014892578125
+Discriminator Loss: 1.384689450263977
+Generator Loss: 0.6990435123443604
+Epoch: 24, iteration: 250
+Autoencoder Loss: 133.03579711914062
+Discriminator Loss: 1.38877272605896
+Generator Loss: 0.6893584728240967
+Epoch: 24, iteration: 300
+Autoencoder Loss: 143.48446655273438
+Discriminator Loss: 1.3854883909225464
+Generator Loss: 0.6974917650222778
+Epoch: 24, iteration: 350
+Autoencoder Loss: 139.07363891601562
+Discriminator Loss: 1.3858468532562256
+Generator Loss: 0.6931284666061401
+Epoch: 24, iteration: 400
+Autoencoder Loss: 134.17453002929688
+Discriminator Loss: 1.3849520683288574
+Generator Loss: 0.6993359923362732
+Epoch: 25, iteration: 50
+Autoencoder Loss: 141.83306884765625
+Discriminator Loss: 1.388542652130127
+Generator Loss: 0.6924000978469849
+Epoch: 25, iteration: 100
+Autoencoder Loss: 134.14195251464844
+Discriminator Loss: 1.382383108139038
+Generator Loss: 0.6970328092575073
+Epoch: 25, iteration: 150
+Autoencoder Loss: 142.58499145507812
+Discriminator Loss: 1.3867013454437256
+Generator Loss: 0.6911990642547607
+Epoch: 25, iteration: 200
+Autoencoder Loss: 139.770263671875
+Discriminator Loss: 1.386156678199768
+Generator Loss: 0.6903259754180908
+Epoch: 25, iteration: 250
+Autoencoder Loss: 145.6904754638672
+Discriminator Loss: 1.3838995695114136
+Generator Loss: 0.6934949159622192
+Epoch: 25, iteration: 300
+Autoencoder Loss: 141.88262939453125
+Discriminator Loss: 1.3947116136550903
+Generator Loss: 0.6905863285064697
+Epoch: 25, iteration: 350
+Autoencoder Loss: 148.30609130859375
+Discriminator Loss: 1.3920481204986572
+Generator Loss: 0.6847586631774902
+Epoch: 25, iteration: 400
+Autoencoder Loss: 144.08714294433594
+Discriminator Loss: 1.389670491218567
+Generator Loss: 0.6885265111923218
+Epoch: 26, iteration: 50
+Autoencoder Loss: 142.0091094970703
+Discriminator Loss: 1.3843860626220703
+Generator Loss: 0.6971811056137085
+Epoch: 26, iteration: 100
+Autoencoder Loss: 125.14889526367188
+Discriminator Loss: 1.3864800930023193
+Generator Loss: 0.6922633647918701
+Epoch: 26, iteration: 150
+Autoencoder Loss: 140.1766357421875
+Discriminator Loss: 1.3871252536773682
+Generator Loss: 0.6890948414802551
+Epoch: 26, iteration: 200
+Autoencoder Loss: 127.59463500976562
+Discriminator Loss: 1.3875972032546997
+Generator Loss: 0.6932505369186401
+Epoch: 26, iteration: 250
+Autoencoder Loss: 136.42904663085938
+Discriminator Loss: 1.3907957077026367
+Generator Loss: 0.6903693675994873
+Epoch: 26, iteration: 300
+Autoencoder Loss: 144.2269287109375
+Discriminator Loss: 1.388500690460205
+Generator Loss: 0.6844873428344727
+Epoch: 26, iteration: 350
+Autoencoder Loss: 142.0548553466797
+Discriminator Loss: 1.3893747329711914
+Generator Loss: 0.6945676207542419
+Epoch: 26, iteration: 400
+Autoencoder Loss: 134.30703735351562
+Discriminator Loss: 1.3902089595794678
+Generator Loss: 0.6903438568115234
+Epoch: 27, iteration: 50
+Autoencoder Loss: 144.19789123535156
+Discriminator Loss: 1.3854626417160034
+Generator Loss: 0.6936928033828735
+Epoch: 27, iteration: 100
+Autoencoder Loss: 141.44712829589844
+Discriminator Loss: 1.3889213800430298
+Generator Loss: 0.6918781995773315
+Epoch: 27, iteration: 150
+Autoencoder Loss: 134.26429748535156
+Discriminator Loss: 1.3887518644332886
+Generator Loss: 0.6901876926422119
+Epoch: 27, iteration: 200
+Autoencoder Loss: 129.85821533203125
+Discriminator Loss: 1.3844761848449707
+Generator Loss: 0.6945549845695496
+Epoch: 27, iteration: 250
+Autoencoder Loss: 136.534912109375
+Discriminator Loss: 1.3866708278656006
+Generator Loss: 0.69493168592453
+Epoch: 27, iteration: 300
+Autoencoder Loss: 139.91888427734375
+Discriminator Loss: 1.3852965831756592
+Generator Loss: 0.6938464641571045
+Epoch: 27, iteration: 350
+Autoencoder Loss: 132.56407165527344
+Discriminator Loss: 1.3856773376464844
+Generator Loss: 0.6872715353965759
+Epoch: 27, iteration: 400
+Autoencoder Loss: 137.2193603515625
+Discriminator Loss: 1.386130690574646
+Generator Loss: 0.6937524676322937
+Epoch: 28, iteration: 50
+Autoencoder Loss: 141.30789184570312
+Discriminator Loss: 1.3898341655731201
+Generator Loss: 0.6925163269042969
+Epoch: 28, iteration: 100
+Autoencoder Loss: 132.4110565185547
+Discriminator Loss: 1.388953447341919
+Generator Loss: 0.6972372531890869
+Epoch: 28, iteration: 150
+Autoencoder Loss: 141.637451171875
+Discriminator Loss: 1.3852708339691162
+Generator Loss: 0.6941123008728027
+Epoch: 28, iteration: 200
+Autoencoder Loss: 132.79286193847656
+Discriminator Loss: 1.3883798122406006
+Generator Loss: 0.6897642612457275
+Epoch: 28, iteration: 250
+Autoencoder Loss: 135.11837768554688
+Discriminator Loss: 1.3890968561172485
+Generator Loss: 0.694501519203186
+Epoch: 28, iteration: 300
+Autoencoder Loss: 133.86009216308594
+Discriminator Loss: 1.3854289054870605
+Generator Loss: 0.6942159533500671
+Epoch: 28, iteration: 350
+Autoencoder Loss: 141.34478759765625
+Discriminator Loss: 1.3848322629928589
+Generator Loss: 0.705916166305542
+Epoch: 28, iteration: 400
+Autoencoder Loss: 138.74868774414062
+Discriminator Loss: 1.388273000717163
+Generator Loss: 0.6893330812454224
+Epoch: 29, iteration: 50
+Autoencoder Loss: 146.71746826171875
+Discriminator Loss: 1.3928849697113037
+Generator Loss: 0.6865997314453125
+Epoch: 29, iteration: 100
+Autoencoder Loss: 144.89462280273438
+Discriminator Loss: 1.3830686807632446
+Generator Loss: 0.698654294013977
+Epoch: 29, iteration: 150
+Autoencoder Loss: 142.75238037109375
+Discriminator Loss: 1.3870387077331543
+Generator Loss: 0.6920868754386902
+Epoch: 29, iteration: 200
+Autoencoder Loss: 141.99560546875
+Discriminator Loss: 1.3809857368469238
+Generator Loss: 0.6988506317138672
+Epoch: 29, iteration: 250
+Autoencoder Loss: 136.24691772460938
+Discriminator Loss: 1.3895405530929565
+Generator Loss: 0.6877318620681763
+Epoch: 29, iteration: 300
+Autoencoder Loss: 131.44227600097656
+Discriminator Loss: 1.3926613330841064
+Generator Loss: 0.6924333572387695
+Epoch: 29, iteration: 350
+Autoencoder Loss: 132.50625610351562
+Discriminator Loss: 1.3878254890441895
+Generator Loss: 0.6939946413040161
+Epoch: 29, iteration: 400
+Autoencoder Loss: 139.87600708007812
+Discriminator Loss: 1.3855180740356445
+Generator Loss: 0.6950949430465698
+Epoch: 30, iteration: 50
+Autoencoder Loss: 128.27297973632812
+Discriminator Loss: 1.3860851526260376
+Generator Loss: 0.6930183172225952
+Epoch: 30, iteration: 100
+Autoencoder Loss: 143.89190673828125
+Discriminator Loss: 1.3857358694076538
+Generator Loss: 0.6935997009277344
+Epoch: 30, iteration: 150
+Autoencoder Loss: 144.21316528320312
+Discriminator Loss: 1.3851490020751953
+Generator Loss: 0.6951187252998352
+Epoch: 30, iteration: 200
+Autoencoder Loss: 138.9171142578125
+Discriminator Loss: 1.3880071640014648
+Generator Loss: 0.6919550895690918
+Epoch: 30, iteration: 250
+Autoencoder Loss: 143.37339782714844
+Discriminator Loss: 1.3865633010864258
+Generator Loss: 0.6927251815795898
+Epoch: 30, iteration: 300
+Autoencoder Loss: 128.6881866455078
+Discriminator Loss: 1.3939110040664673
+Generator Loss: 0.6911813020706177
+Epoch: 30, iteration: 350
+Autoencoder Loss: 146.16143798828125
+Discriminator Loss: 1.3847960233688354
+Generator Loss: 0.690430223941803
+Epoch: 30, iteration: 400
+Autoencoder Loss: 136.89901733398438
+Discriminator Loss: 1.3869843482971191
+Generator Loss: 0.6870449781417847
+Epoch: 31, iteration: 50
+Autoencoder Loss: 140.3961181640625
+Discriminator Loss: 1.3875995874404907
+Generator Loss: 0.6895099878311157
+Epoch: 31, iteration: 100
+Autoencoder Loss: 138.03445434570312
+Discriminator Loss: 1.3885812759399414
+Generator Loss: 0.6948796510696411
+Epoch: 31, iteration: 150
+Autoencoder Loss: 132.5455780029297
+Discriminator Loss: 1.385239601135254
+Generator Loss: 0.6948875188827515
+Epoch: 31, iteration: 200
+Autoencoder Loss: 129.79855346679688
+Discriminator Loss: 1.3864612579345703
+Generator Loss: 0.6926393508911133
+Epoch: 31, iteration: 250
+Autoencoder Loss: 133.24688720703125
+Discriminator Loss: 1.3895968198776245
+Generator Loss: 0.6901403665542603
+Epoch: 31, iteration: 300
+Autoencoder Loss: 134.6432342529297
+Discriminator Loss: 1.3890268802642822
+Generator Loss: 0.6908623576164246
+Epoch: 31, iteration: 350
+Autoencoder Loss: 135.32522583007812
+Discriminator Loss: 1.3923099040985107
+Generator Loss: 0.6915749907493591
+Epoch: 31, iteration: 400
+Autoencoder Loss: 137.2887420654297
+Discriminator Loss: 1.382552146911621
+Generator Loss: 0.6963741779327393
+Epoch: 32, iteration: 50
+Autoencoder Loss: 128.7557830810547
+Discriminator Loss: 1.3853141069412231
+Generator Loss: 0.6922769546508789
+Epoch: 32, iteration: 100
+Autoencoder Loss: 134.6764678955078
+Discriminator Loss: 1.3869690895080566
+Generator Loss: 0.6916500329971313
+Epoch: 32, iteration: 150
+Autoencoder Loss: 132.7923583984375
+Discriminator Loss: 1.3868417739868164
+Generator Loss: 0.6937114000320435
+Epoch: 32, iteration: 200
+Autoencoder Loss: 139.44052124023438
+Discriminator Loss: 1.3861708641052246
+Generator Loss: 0.6903461217880249
+Epoch: 32, iteration: 250
+Autoencoder Loss: 135.56121826171875
+Discriminator Loss: 1.3858850002288818
+Generator Loss: 0.6941009163856506
+Epoch: 32, iteration: 300
+Autoencoder Loss: 135.26153564453125
+Discriminator Loss: 1.3892639875411987
+Generator Loss: 0.6927675008773804
+Epoch: 32, iteration: 350
+Autoencoder Loss: 136.29214477539062
+Discriminator Loss: 1.3874313831329346
+Generator Loss: 0.6948660016059875
+Epoch: 32, iteration: 400
+Autoencoder Loss: 130.3760528564453
+Discriminator Loss: 1.3861491680145264
+Generator Loss: 0.6932642459869385
+Epoch: 33, iteration: 50
+Autoencoder Loss: 140.2554168701172
+Discriminator Loss: 1.3859496116638184
+Generator Loss: 0.6937036514282227
+Epoch: 33, iteration: 100
+Autoencoder Loss: 136.3116455078125
+Discriminator Loss: 1.383442997932434
+Generator Loss: 0.6962838172912598
+Epoch: 33, iteration: 150
+Autoencoder Loss: 131.15748596191406
+Discriminator Loss: 1.387190818786621
+Generator Loss: 0.6930335164070129
+Epoch: 33, iteration: 200
+Autoencoder Loss: 137.28317260742188
+Discriminator Loss: 1.3870645761489868
+Generator Loss: 0.6938535571098328
+Epoch: 33, iteration: 250
+Autoencoder Loss: 136.68028259277344
+Discriminator Loss: 1.3868408203125
+Generator Loss: 0.6930745840072632
+Epoch: 33, iteration: 300
+Autoencoder Loss: 139.44012451171875
+Discriminator Loss: 1.3856358528137207
+Generator Loss: 0.6915823221206665
+Epoch: 33, iteration: 350
+Autoencoder Loss: 133.74078369140625
+Discriminator Loss: 1.3883436918258667
+Generator Loss: 0.6931213140487671
+Epoch: 33, iteration: 400
+Autoencoder Loss: 139.87152099609375
+Discriminator Loss: 1.388222098350525
+Generator Loss: 0.6889072060585022
+Epoch: 34, iteration: 50
+Autoencoder Loss: 134.42697143554688
+Discriminator Loss: 1.3873564004898071
+Generator Loss: 0.6930689215660095
+Epoch: 34, iteration: 100
+Autoencoder Loss: 141.4201202392578
+Discriminator Loss: 1.385107159614563
+Generator Loss: 0.6972665786743164
+Epoch: 34, iteration: 150
+Autoencoder Loss: 137.94369506835938
+Discriminator Loss: 1.3836976289749146
+Generator Loss: 0.6872460842132568
+Epoch: 34, iteration: 200
+Autoencoder Loss: 132.51795959472656
+Discriminator Loss: 1.3850842714309692
+Generator Loss: 0.6954065561294556
+Epoch: 34, iteration: 250
+Autoencoder Loss: 134.23138427734375
+Discriminator Loss: 1.3867735862731934
+Generator Loss: 0.6937654614448547
+Epoch: 34, iteration: 300
+Autoencoder Loss: 124.64181518554688
+Discriminator Loss: 1.3872288465499878
+Generator Loss: 0.6934071183204651
+Epoch: 34, iteration: 350
+Autoencoder Loss: 136.26258850097656
+Discriminator Loss: 1.388315200805664
+Generator Loss: 0.6908739805221558
+Epoch: 34, iteration: 400
+Autoencoder Loss: 133.48727416992188
+Discriminator Loss: 1.3864516019821167
+Generator Loss: 0.6933400630950928
+Epoch: 35, iteration: 50
+Autoencoder Loss: 142.75521850585938
+Discriminator Loss: 1.385045051574707
+Generator Loss: 0.6921725273132324
+Epoch: 35, iteration: 100
+Autoencoder Loss: 130.8068389892578
+Discriminator Loss: 1.3856122493743896
+Generator Loss: 0.6947181820869446
+Epoch: 35, iteration: 150
+Autoencoder Loss: 138.28466796875
+Discriminator Loss: 1.385778546333313
+Generator Loss: 0.6935460567474365
+Epoch: 35, iteration: 200
+Autoencoder Loss: 135.39825439453125
+Discriminator Loss: 1.3857314586639404
+Generator Loss: 0.6947483420372009
+Epoch: 35, iteration: 250
+Autoencoder Loss: 131.31927490234375
+Discriminator Loss: 1.3856189250946045
+Generator Loss: 0.691939115524292
+Epoch: 35, iteration: 300
+Autoencoder Loss: 130.3720245361328
+Discriminator Loss: 1.3863766193389893
+Generator Loss: 0.6932010650634766
+Epoch: 35, iteration: 350
+Autoencoder Loss: 130.24388122558594
+Discriminator Loss: 1.3890442848205566
+Generator Loss: 0.6910997629165649
+Epoch: 35, iteration: 400
+Autoencoder Loss: 133.88775634765625
+Discriminator Loss: 1.3853553533554077
+Generator Loss: 0.6924578547477722
+Epoch: 36, iteration: 50
+Autoencoder Loss: 128.595703125
+Discriminator Loss: 1.3873729705810547
+Generator Loss: 0.6866326332092285
+Epoch: 36, iteration: 100
+Autoencoder Loss: 139.0711669921875
+Discriminator Loss: 1.388362169265747
+Generator Loss: 0.6904269456863403
+Epoch: 36, iteration: 150
+Autoencoder Loss: 132.55026245117188
+Discriminator Loss: 1.3843560218811035
+Generator Loss: 0.6929705142974854
+Epoch: 36, iteration: 200
+Autoencoder Loss: 136.2318115234375
+Discriminator Loss: 1.3891175985336304
+Generator Loss: 0.6924827694892883
+Epoch: 36, iteration: 250
+Autoencoder Loss: 137.95156860351562
+Discriminator Loss: 1.3881746530532837
+Generator Loss: 0.6931420564651489
+Epoch: 36, iteration: 300
+Autoencoder Loss: 129.00045776367188
+Discriminator Loss: 1.3865528106689453
+Generator Loss: 0.6934848427772522
+Epoch: 36, iteration: 350
+Autoencoder Loss: 136.49234008789062
+Discriminator Loss: 1.3866240978240967
+Generator Loss: 0.6930486559867859
+Epoch: 36, iteration: 400
+Autoencoder Loss: 130.49053955078125
+Discriminator Loss: 1.3868974447250366
+Generator Loss: 0.6927878260612488
+Epoch: 37, iteration: 50
+Autoencoder Loss: 132.11404418945312
+Discriminator Loss: 1.3868656158447266
+Generator Loss: 0.6930800080299377
+Epoch: 37, iteration: 100
+Autoencoder Loss: 132.4495849609375
+Discriminator Loss: 1.386786699295044
+Generator Loss: 0.6913338303565979
+Epoch: 37, iteration: 150
+Autoencoder Loss: 135.27200317382812
+Discriminator Loss: 1.3880869150161743
+Generator Loss: 0.6890949010848999
+Epoch: 37, iteration: 200
+Autoencoder Loss: 133.02561950683594
+Discriminator Loss: 1.390394926071167
+Generator Loss: 0.6962907314300537
+Epoch: 37, iteration: 250
+Autoencoder Loss: 139.62640380859375
+Discriminator Loss: 1.3863190412521362
+Generator Loss: 0.6932859420776367
+Epoch: 37, iteration: 300
+Autoencoder Loss: 128.76174926757812
+Discriminator Loss: 1.3874832391738892
+Generator Loss: 0.6943995952606201
+Epoch: 37, iteration: 350
+Autoencoder Loss: 133.59381103515625
+Discriminator Loss: 1.3864636421203613
+Generator Loss: 0.6931604146957397
+Epoch: 37, iteration: 400
+Autoencoder Loss: 131.6576690673828
+Discriminator Loss: 1.3863167762756348
+Generator Loss: 0.6926121711730957
+Epoch: 38, iteration: 50
+Autoencoder Loss: 132.5540008544922
+Discriminator Loss: 1.3870480060577393
+Generator Loss: 0.6940568089485168
+Epoch: 38, iteration: 100
+Autoencoder Loss: 139.36158752441406
+Discriminator Loss: 1.3864238262176514
+Generator Loss: 0.6932680606842041
+Epoch: 38, iteration: 150
+Autoencoder Loss: 135.52194213867188
+Discriminator Loss: 1.3865134716033936
+Generator Loss: 0.6947330236434937
+Epoch: 38, iteration: 200
+Autoencoder Loss: 133.3861083984375
+Discriminator Loss: 1.3886032104492188
+Generator Loss: 0.6924557685852051
+Epoch: 38, iteration: 250
+Autoencoder Loss: 135.07350158691406
+Discriminator Loss: 1.3854776620864868
+Generator Loss: 0.6928600072860718
+Epoch: 38, iteration: 300
+Autoencoder Loss: 137.19432067871094
+Discriminator Loss: 1.3863437175750732
+Generator Loss: 0.6935406923294067
+Epoch: 38, iteration: 350
+Autoencoder Loss: 132.1783447265625
+Discriminator Loss: 1.3862800598144531
+Generator Loss: 0.6937153339385986
+Epoch: 38, iteration: 400
+Autoencoder Loss: 135.85260009765625
+Discriminator Loss: 1.3860955238342285
+Generator Loss: 0.6919914484024048
+Epoch: 39, iteration: 50
+Autoencoder Loss: 129.5043487548828
+Discriminator Loss: 1.3864126205444336
+Generator Loss: 0.6937384009361267
+Epoch: 39, iteration: 100
+Autoencoder Loss: 142.9067840576172
+Discriminator Loss: 1.3875677585601807
+Generator Loss: 0.6894410848617554
+Epoch: 39, iteration: 150
+Autoencoder Loss: 126.27098846435547
+Discriminator Loss: 1.3868577480316162
+Generator Loss: 0.694222629070282
+Epoch: 39, iteration: 200
+Autoencoder Loss: 129.3701171875
+Discriminator Loss: 1.3866604566574097
+Generator Loss: 0.6949954032897949
+Epoch: 39, iteration: 250
+Autoencoder Loss: 134.17352294921875
+Discriminator Loss: 1.3865350484848022
+Generator Loss: 0.6938217878341675
+Epoch: 39, iteration: 300
+Autoencoder Loss: 134.44602966308594
+Discriminator Loss: 1.3861870765686035
+Generator Loss: 0.6933611631393433
+Epoch: 39, iteration: 350
+Autoencoder Loss: 143.54299926757812
+Discriminator Loss: 1.3864136934280396
+Generator Loss: 0.6957197785377502
+Epoch: 39, iteration: 400
+Autoencoder Loss: 130.7215118408203
+Discriminator Loss: 1.3861446380615234
+Generator Loss: 0.6905980706214905
+Epoch: 40, iteration: 50
+Autoencoder Loss: 136.6127166748047
+Discriminator Loss: 1.3847869634628296
+Generator Loss: 0.6924103498458862
+Epoch: 40, iteration: 100
+Autoencoder Loss: 133.48529052734375
+Discriminator Loss: 1.3889732360839844
+Generator Loss: 0.692669689655304
+Epoch: 40, iteration: 150
+Autoencoder Loss: 138.58802795410156
+Discriminator Loss: 1.3866019248962402
+Generator Loss: 0.6916906833648682
+Epoch: 40, iteration: 200
+Autoencoder Loss: 134.99896240234375
+Discriminator Loss: 1.3866357803344727
+Generator Loss: 0.6930047273635864
+Epoch: 40, iteration: 250
+Autoencoder Loss: 128.09588623046875
+Discriminator Loss: 1.3879005908966064
+Generator Loss: 0.6981673836708069
+Epoch: 40, iteration: 300
+Autoencoder Loss: 145.3894805908203
+Discriminator Loss: 1.395660400390625
+Generator Loss: 0.6884980797767639
+Epoch: 40, iteration: 350
+Autoencoder Loss: 134.09439086914062
+Discriminator Loss: 1.3857076168060303
+Generator Loss: 0.6938908100128174
+Epoch: 40, iteration: 400
+Autoencoder Loss: 132.80418395996094
+Discriminator Loss: 1.386368751525879
+Generator Loss: 0.6923588514328003
+Epoch: 41, iteration: 50
+Autoencoder Loss: 132.19297790527344
+Discriminator Loss: 1.3866584300994873
+Generator Loss: 0.6959888339042664
+Epoch: 41, iteration: 100
+Autoencoder Loss: 135.27557373046875
+Discriminator Loss: 1.3863108158111572
+Generator Loss: 0.6934916377067566
+Epoch: 41, iteration: 150
+Autoencoder Loss: 130.49884033203125
+Discriminator Loss: 1.3870298862457275
+Generator Loss: 0.692717969417572
+Epoch: 41, iteration: 200
+Autoencoder Loss: 128.1439666748047
+Discriminator Loss: 1.386305809020996
+Generator Loss: 0.6946824193000793
+Epoch: 41, iteration: 250
+Autoencoder Loss: 135.052978515625
+Discriminator Loss: 1.3864326477050781
+Generator Loss: 0.6934940814971924
+Epoch: 41, iteration: 300
+Autoencoder Loss: 132.59170532226562
+Discriminator Loss: 1.3864669799804688
+Generator Loss: 0.6931138634681702
+Epoch: 41, iteration: 350
+Autoencoder Loss: 136.98980712890625
+Discriminator Loss: 1.3865817785263062
+Generator Loss: 0.6921235918998718
+Epoch: 41, iteration: 400
+Autoencoder Loss: 139.40228271484375
+Discriminator Loss: 1.3863372802734375
+Generator Loss: 0.6925028562545776
+Epoch: 42, iteration: 50
+Autoencoder Loss: 139.95608520507812
+Discriminator Loss: 1.386286973953247
+Generator Loss: 0.691114604473114
+Epoch: 42, iteration: 100
+Autoencoder Loss: 132.92218017578125
+Discriminator Loss: 1.3860830068588257
+Generator Loss: 0.6938432455062866
+Epoch: 42, iteration: 150
+Autoencoder Loss: 134.13833618164062
+Discriminator Loss: 1.38558030128479
+Generator Loss: 0.6900182366371155
+Epoch: 42, iteration: 200
+Autoencoder Loss: 134.56570434570312
+Discriminator Loss: 1.3863394260406494
+Generator Loss: 0.6934336423873901
+Epoch: 42, iteration: 250
+Autoencoder Loss: 135.49847412109375
+Discriminator Loss: 1.386101245880127
+Generator Loss: 0.6934936046600342
+Epoch: 42, iteration: 300
+Autoencoder Loss: 130.59681701660156
+Discriminator Loss: 1.3865795135498047
+Generator Loss: 0.6935723423957825
+Epoch: 42, iteration: 350
+Autoencoder Loss: 134.8419647216797
+Discriminator Loss: 1.3864842653274536
+Generator Loss: 0.6935762166976929
+Epoch: 42, iteration: 400
+Autoencoder Loss: 129.72813415527344
+Discriminator Loss: 1.3867027759552002
+Generator Loss: 0.691150963306427
+Epoch: 43, iteration: 50
+Autoencoder Loss: 134.65176391601562
+Discriminator Loss: 1.3847148418426514
+Generator Loss: 0.6940723657608032
+Epoch: 43, iteration: 100
+Autoencoder Loss: 132.4170379638672
+Discriminator Loss: 1.3864281177520752
+Generator Loss: 0.6922792792320251
+Epoch: 43, iteration: 150
+Autoencoder Loss: 129.5614471435547
+Discriminator Loss: 1.3864760398864746
+Generator Loss: 0.6936063766479492
+Epoch: 43, iteration: 200
+Autoencoder Loss: 144.46446228027344
+Discriminator Loss: 1.3897781372070312
+Generator Loss: 0.6952153444290161
+Epoch: 43, iteration: 250
+Autoencoder Loss: 150.95191955566406
+Discriminator Loss: 1.3777313232421875
+Generator Loss: 0.7055940628051758
+Epoch: 43, iteration: 300
+Autoencoder Loss: 148.2521514892578
+Discriminator Loss: 1.386899709701538
+Generator Loss: 0.7108482122421265
+Epoch: 43, iteration: 350
+Autoencoder Loss: 149.84988403320312
+Discriminator Loss: 1.3845281600952148
+Generator Loss: 0.6924422383308411
+Epoch: 43, iteration: 400
+Autoencoder Loss: 156.44642639160156
+Discriminator Loss: 1.3892052173614502
+Generator Loss: 0.6909019947052002
+Epoch: 44, iteration: 50
+Autoencoder Loss: 142.53793334960938
+Discriminator Loss: 1.3834125995635986
+Generator Loss: 0.698291003704071
+Epoch: 44, iteration: 100
+Autoencoder Loss: 141.384765625
+Discriminator Loss: 1.3821115493774414
+Generator Loss: 0.696833610534668
+Epoch: 44, iteration: 150
+Autoencoder Loss: 141.8907928466797
+Discriminator Loss: 1.3863922357559204
+Generator Loss: 0.6954010725021362
+Epoch: 44, iteration: 200
+Autoencoder Loss: 133.6124267578125
+Discriminator Loss: 1.3869438171386719
+Generator Loss: 0.6908196210861206
+Epoch: 44, iteration: 250
+Autoencoder Loss: 127.47992706298828
+Discriminator Loss: 1.3848235607147217
+Generator Loss: 0.6927643418312073
+Epoch: 44, iteration: 300
+Autoencoder Loss: 138.0413360595703
+Discriminator Loss: 1.3868303298950195
+Generator Loss: 0.6925740838050842
+Epoch: 44, iteration: 350
+Autoencoder Loss: 127.70252990722656
+Discriminator Loss: 1.3862941265106201
+Generator Loss: 0.6931741237640381
+Epoch: 44, iteration: 400
+Autoencoder Loss: 131.97994995117188
+Discriminator Loss: 1.386293649673462
+Generator Loss: 0.6931415796279907
+Epoch: 45, iteration: 50
+Autoencoder Loss: 126.38372802734375
+Discriminator Loss: 1.386293888092041
+Generator Loss: 0.6931469440460205
+Epoch: 45, iteration: 100
+Autoencoder Loss: 128.17613220214844
+Discriminator Loss: 1.3862943649291992
+Generator Loss: 0.6931470632553101
+Epoch: 45, iteration: 150
+Autoencoder Loss: 132.59910583496094
+Discriminator Loss: 1.3862934112548828
+Generator Loss: 0.6931465864181519
+Epoch: 45, iteration: 200
+Autoencoder Loss: 140.01107788085938
+Discriminator Loss: 1.3862943649291992
+Generator Loss: 0.6931483745574951
+Epoch: 45, iteration: 250
+Autoencoder Loss: 133.09686279296875
+Discriminator Loss: 1.3862946033477783
+Generator Loss: 0.6931477785110474
+Epoch: 45, iteration: 300
+Autoencoder Loss: 126.77218627929688
+Discriminator Loss: 1.3862934112548828
+Generator Loss: 0.6931477189064026
+Epoch: 45, iteration: 350
+Autoencoder Loss: 133.1222381591797
+Discriminator Loss: 1.3862943649291992
+Generator Loss: 0.6931475400924683
+Epoch: 45, iteration: 400
+Autoencoder Loss: 143.6575927734375
+Discriminator Loss: 1.3862941265106201
+Generator Loss: 0.6931484937667847
+Epoch: 46, iteration: 50
+Autoencoder Loss: 137.53948974609375
+Discriminator Loss: 1.3862934112548828
+Generator Loss: 0.6931414008140564
+Epoch: 46, iteration: 100
+Autoencoder Loss: 131.51986694335938
+Discriminator Loss: 1.3862967491149902
+Generator Loss: 0.6932187080383301
+Epoch: 46, iteration: 150
+Autoencoder Loss: 128.0379180908203
+Discriminator Loss: 1.3862930536270142
+Generator Loss: 0.6931621432304382
+Epoch: 46, iteration: 200
+Autoencoder Loss: 128.0269317626953
+Discriminator Loss: 1.3862950801849365
+Generator Loss: 0.6931514739990234
+Epoch: 46, iteration: 250
+Autoencoder Loss: 131.39244079589844
+Discriminator Loss: 1.386293649673462
+Generator Loss: 0.693148672580719
+Epoch: 46, iteration: 300
+Autoencoder Loss: 131.35838317871094
+Discriminator Loss: 1.386293888092041
+Generator Loss: 0.6931478977203369
+Epoch: 46, iteration: 350
+Autoencoder Loss: 134.47564697265625
+Discriminator Loss: 1.3862931728363037
+Generator Loss: 0.6931504011154175
+Epoch: 46, iteration: 400
+Autoencoder Loss: 130.89773559570312
+Discriminator Loss: 1.386294960975647
+Generator Loss: 0.6931483745574951
+Epoch: 47, iteration: 50
+Autoencoder Loss: 131.097900390625
+Discriminator Loss: 1.386293649673462
+Generator Loss: 0.6931466460227966
+Epoch: 47, iteration: 100
+Autoencoder Loss: 133.67703247070312
+Discriminator Loss: 1.3862942457199097
+Generator Loss: 0.6931440830230713
+Epoch: 47, iteration: 150
+Autoencoder Loss: 132.43435668945312
+Discriminator Loss: 1.3862941265106201
+Generator Loss: 0.693146824836731
+Epoch: 47, iteration: 200
+Autoencoder Loss: 138.30084228515625
+Discriminator Loss: 1.386293888092041
+Generator Loss: 0.6931502819061279
+Epoch: 47, iteration: 250
+Autoencoder Loss: 132.15904235839844
+Discriminator Loss: 1.3862948417663574
+Generator Loss: 0.6931461095809937
+Epoch: 47, iteration: 300
+Autoencoder Loss: 139.67825317382812
+Discriminator Loss: 1.386293649673462
+Generator Loss: 0.6931495070457458
+Epoch: 47, iteration: 350
+Autoencoder Loss: 131.72918701171875
+Discriminator Loss: 1.3863638639450073
+Generator Loss: 0.6890544891357422
+Epoch: 47, iteration: 400
+Autoencoder Loss: 140.72402954101562
+Discriminator Loss: 1.3867378234863281
+Generator Loss: 0.6915265321731567
+Epoch: 48, iteration: 50
+Autoencoder Loss: 135.5804901123047
+Discriminator Loss: 1.3862957954406738
+Generator Loss: 0.6931595206260681
+Epoch: 48, iteration: 100
+Autoencoder Loss: 134.4617462158203
+Discriminator Loss: 1.3862943649291992
+Generator Loss: 0.6931566596031189
+Epoch: 48, iteration: 150
+Autoencoder Loss: 127.43053436279297
+Discriminator Loss: 1.3852006196975708
+Generator Loss: 0.6945659518241882
+Epoch: 48, iteration: 200
+Autoencoder Loss: 136.28720092773438
+Discriminator Loss: 1.3862614631652832
+Generator Loss: 0.6895763278007507
+Epoch: 48, iteration: 250
+Autoencoder Loss: 128.69631958007812
+Discriminator Loss: 1.3863003253936768
+Generator Loss: 0.6962337493896484
+Epoch: 48, iteration: 300
+Autoencoder Loss: 134.85238647460938
+Discriminator Loss: 1.3862707614898682
+Generator Loss: 0.6930673122406006
+Epoch: 48, iteration: 350
+Autoencoder Loss: 133.66293334960938
+Discriminator Loss: 1.386338710784912
+Generator Loss: 0.6924498677253723
+Epoch: 48, iteration: 400
+Autoencoder Loss: 138.23062133789062
+Discriminator Loss: 1.3858938217163086
+Generator Loss: 0.6936544179916382
+Epoch: 49, iteration: 50
+Autoencoder Loss: 137.75393676757812
+Discriminator Loss: 1.3863056898117065
+Generator Loss: 0.6935108304023743
+Epoch: 49, iteration: 100
+Autoencoder Loss: 136.56787109375
+Discriminator Loss: 1.387522578239441
+Generator Loss: 0.684799313545227
+Epoch: 49, iteration: 150
+Autoencoder Loss: 138.77719116210938
+Discriminator Loss: 1.3862059116363525
+Generator Loss: 0.6943354606628418
+Epoch: 49, iteration: 200
+Autoencoder Loss: 129.9980926513672
+Discriminator Loss: 1.3873474597930908
+Generator Loss: 0.6900553703308105
+Epoch: 49, iteration: 250
+Autoencoder Loss: 129.91195678710938
+Discriminator Loss: 1.3864907026290894
+Generator Loss: 0.693011462688446
+Epoch: 49, iteration: 300
+Autoencoder Loss: 132.09173583984375
+Discriminator Loss: 1.3862131834030151
+Generator Loss: 0.6949543952941895
+Epoch: 49, iteration: 350
+Autoencoder Loss: 135.54922485351562
+Discriminator Loss: 1.385178804397583
+Generator Loss: 0.6935361623764038
+Epoch: 49, iteration: 400
+Autoencoder Loss: 143.11721801757812
+Discriminator Loss: 1.386617660522461
+Generator Loss: 0.6982719302177429
