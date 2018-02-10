@@ -298,8 +298,9 @@ class BayesianAutoencoder(object):
         
         num_batches = mnist.train.num_examples // batch_size
 
+        start_time = time.time()
+        
         for i in range(epochs):
-            start_time = time.time()
             train_cost = 0
             cum_ell = 0
             cum_kl = 0
@@ -328,6 +329,8 @@ class BayesianAutoencoder(object):
         
         train_writer.close()
         test_writer.close()
+        
+        print("Total training time: ", time.time() - start_time)
     
     def benchmark(self, validation=False, batch_size=128):
         # TEST LOG LIKELIHOOD
