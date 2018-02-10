@@ -29,42 +29,37 @@ def lrelu(x, leak=0.2, name="lrelu"):
 class VariationalConvAutoencoder(object):
     def __init__(self, name,
                  n_inputs=784,
-                 n_conv_maps = 10,
-                 n_conv_layers = 3, 
-                 n_neurons_encoder = [2048, 256],
+                 n_conv_maps = [10, 10, 10],
+                 n_conv_filters = [3, 3, 3], 
+                 n_conv_strides = [2, 2, 2], 
+                 n_conv_padding = ['SAME', 'VALID', 'SAME'], 
+                 n_dense = [256, 128],
                  n_latent=2,
-                 n_neurons_decoder = [256, 2048],
-                 n_conv_decoder = [20, 10],
-                 batch_size = 128,
-                 activation = tf.nn.tanh):
+                 activation = lrelu):
         
         tf.reset_default_graph()
         
         self.name = name
+        print("VCAE "+self.name)
         
         # ATTRIBUTES
         self.N = n_inputs
-        self.n_conv_maps = n_conv_maps
-        self.n_conv_layers = n_conv_layers        
-        self.n_encoder = n_neurons_encoder
-        self.n_decoder = n_neurons_decoder
+        self.n_conv_m = n_conv_maps
+        self.n_conv_f = n_conv_filters
+        self.n_conv_s = n_conv_strides 
+        self.n_conv_p = n_conv_padding
+        self.n_dense = n_dense
         self.n_latent = n_latent
-        self.length_encoder = len(n_neurons_encoder)
-        self.length_decoder = len(n_neurons_decoder)
-        self.layers = self.length_encoder + self.length_decoder + 1 
-        self.activ = activation
+        self.act = activation
         
         ## DATA PLACEHOLDERS (BATCHES)
         with tf.name_scope('input'):
             self.X = tf.placeholder(tf.float32, shape=[None, self.N], name='X')
             
         with tf.name_scope('input_reshape'):
-            image_shaped_input = tf.reshape(self.X, [-1, 28, 28, 1])
-            tf.summary.image('input', image_shaped_input, 10)
-        
-        # INITIALIZE WEIGHTS & BIASES
-        self.W_enc, self.W_z_mu, self.W_z_log_sigma, self.W_dec = self.initialize_W()
-        self.b_enc, self.b_z_mu, self.b_z_log_sigma, self.b_dec = self.initialize_b()
+            self.image_X = tf.reshape(self.X, [-1, 28, 28, 1])
+               
+        self.X_size = tf.shape(self.X)[0]
             
         ## COMPUTATIONAL GRAPH
         self.Y, self.z_mu, self.z_log_sigma, self.z = self.feedforward()
@@ -72,92 +67,18 @@ class VariationalConvAutoencoder(object):
 
         ## Initialize the session
         self.session = tf.InteractiveSession()
-    
-        print("VAE "+self.name)
-        self.print_network_size()
+        self.session.run(tf.global_variables_initializer())
         
-        
-    def print_network_size(self):
-        """Print the sizes of biases and weights"""
-        print(" --> Encoder")        
-        for w, b in zip(self.W_enc, self.b_enc):
-            print("    w: ", w.get_shape()," |  b:", b.get_shape())
-            
-        print(" --> Latent Space")   
-        print("    Mu.     w:", self.W_z_mu.get_shape()," |  b:",
-              self.b_z_mu.get_shape())
-        print("    Sigma2. w:", self.W_z_log_sigma.get_shape()," |  b:",
-              self.b_z_log_sigma.get_shape())
-        
-        print(" --> Decoder")   
-        for w, b in zip(self.W_dec, self.b_dec):
-            print("    w: ", w.get_shape()," |  b:", b.get_shape())
-
     ## ---------------------------------------------------------------------            
     ## --------------- TF WEIGHTS & BIASES INITIALIZATION ------------------
     ## ---------------------------------------------------------------------
-    def init_xavier(self, shape):
+    def xav(self, shape):
+        """
+        Xavier initialization for the weights and biases
+        """
         initial = tf.random_normal(shape, mean=0.0,
                                stddev=tf.sqrt(3./sum(shape)))
-        return tf.Variable(initial)
-    
-    
-    def initialize_W(self):
-        """
-        Define all the weights for the network.
-        We initialize them to standard normal iid using Xavier Initializer
-        """
-        
-        W_encoder = []
-        W_latent_mu = []
-        W_latent_log_sigma = []
-        W_decoder = []
-        
-        with tf.name_scope("Encoder_layer_weights"):
-            W_encoder.append(self.init_xavier(shape =[self.N, self.n_encoder[0]]))
-            for i in range(1, self.length_encoder):
-                W_encoder.append(self.init_xavier(shape =[self.n_encoder[i-1], self.n_encoder[i]]))
-        
-        with tf.name_scope("Latent_layer_weights"):
-            W_latent_mu = self.init_xavier(shape =[self.n_encoder[-1], self.n_latent]) 
-            W_latent_log_sigma = self.init_xavier(shape =[self.n_encoder[-1], self.n_latent])      
-            
-        with tf.name_scope("Decoder_layer_weights"):
-            W_decoder.append(self.init_xavier(shape=[self.n_latent, self.n_decoder[0]]))
-            for i in range(1, self.length_decoder):
-                W_decoder.append(self.init_xavier(shape=[self.n_decoder[i-1], self.n_decoder[i]]))
-            W_decoder.append(self.init_xavier(shape=[self.n_decoder[-1], self.N]))
-        
-        return W_encoder, W_latent_mu, W_latent_log_sigma, W_decoder
-
-    
-    def initialize_b(self):
-        """
-        Define all the biases for the network.
-        We initialize them to standard normal iid using Xavier Initializer
-        """
-        
-        b_encoder = []
-        b_latent_mu = []
-        b_latent_log_sigma = []
-        b_decoder = []
-        
-        with tf.name_scope("Encoder_layer_biases"):
-            b_encoder.append(self.init_xavier(shape=[self.n_encoder[0]]))
-            for i in range(1, self.length_encoder):
-                b_encoder.append(self.init_xavier(shape=[self.n_encoder[i]]))
-        
-        with tf.name_scope("Latent_layer_biases"):
-            b_latent_mu = self.init_xavier(shape =[self.n_latent]) 
-            b_latent_log_sigma = self.init_xavier(shape =[self.n_latent])      
-            
-        with tf.name_scope("Decoder_layer_biases"):
-            b_decoder.append(self.init_xavier(shape=[self.n_decoder[0]]))
-            for i in range(1, self.length_decoder):
-                b_decoder.append(self.init_xavier(shape=[self.n_decoder[i]]))
-            b_decoder.append(self.init_xavier(shape=[self.N]))
-            
-        return b_encoder, b_latent_mu, b_latent_log_sigma, b_decoder
+        return tf.Variable(initial)    
 
     
     ## ---------------------------------------------------------------------            
@@ -176,7 +97,7 @@ class VariationalConvAutoencoder(object):
         Samples from the posterior of the variational latent space.
         We draw samples using the reparameterization trick.
         """
-        return z_mu + tf.exp(z_log_o) * self.get_samples(tf.shape(self.X)[0], self.n_latent)
+        return z_mu + tf.exp(z_log_o) * self.get_samples(self.X_size, self.n_latent)
     
         
         
@@ -184,23 +105,79 @@ class VariationalConvAutoencoder(object):
     ## --------------------------- FEEDFORWARD -----------------------------
     ## ---------------------------------------------------------------------
     def encoder(self, net):
+        c_init = tf.contrib.layers.xavier_initializer_conv2d(uniform=False)
+        d_init = tf.contrib.layers.xavier_initializer(uniform=False)
         '''ENCODER: transform the input image into the latent space'''
-        for i in range(self.length_encoder):
-            net = self.activ(tf.matmul(net, self.W_enc[i]) + self.b_enc[i])
+        # Convolutional Layers
+        print(' --> Encoder')
+        print(net.shape)
+        for i in range(len(self.n_conv_m)):
+            net = tf.layers.conv2d(net,
+                filters = self.n_conv_m[i],
+                kernel_size = [self.n_conv_f[i], self.n_conv_f[i]],
+                strides =     [self.n_conv_s[i], self.n_conv_s[i]],
+                activation = self.act,
+                padding = self.n_conv_p[i], 
+                kernel_initializer = c_init)
+            print(net.shape)
+        self.conv_shape = tf.shape(net)
+        
+        # Dense layers    
+        net = tf.contrib.layers.flatten(net)
+        self.flat_shape = net.shape
+        for i in range(len(self.n_dense)):
+            print(net.shape)
+            net = tf.layers.dense(net, self.n_dense[i], activation=self.act,
+                                  kernel_initializer=d_init)
             
-        z_mu = tf.matmul(net, self.W_z_mu) + self.b_z_mu
-        z_log_sigma = 0.5 * (tf.matmul(net, self.W_z_log_sigma) + self.b_z_log_sigma)
+        print(net.shape)
+        # Latent Weights   
+        print(' --> Latent space') 
+        z_mu = tf.layers.dense(net, self.n_latent,
+                               kernel_initializer=d_init)
+        z_log_sigma = 0.5 * tf.layers.dense(net, self.n_latent, 
+                               kernel_initializer=d_init)
         
         return z_mu, z_log_sigma
         
         
-    def decoder(self, z):
+    def decoder(self, net):
         '''DECODER: transform a Latent Space representation into an image'''
-        net = self.activ(tf.matmul(z, self.W_dec[0]) + self.b_dec[0])
-        for i in range(1, self.length_decoder):
-            net = self.activ(tf.matmul(net, self.W_dec[i]) + self.b_dec[i])
-        
-        return tf.nn.sigmoid(tf.matmul(net, self.W_dec[-1]) + self.b_dec[-1])        
+        c_init = tf.contrib.layers.xavier_initializer_conv2d(uniform=False)
+        d_init = tf.contrib.layers.xavier_initializer(uniform=False)
+        # Dense layers
+        print(net.shape)
+        print(' --> Decoder') 
+        for i in reversed(range(len(self.n_dense))):
+            net = tf.layers.dense(net, self.n_dense[i], activation=self.act,
+                                  kernel_initializer=d_init)
+            print(net.shape)
+        net = tf.layers.dense(net, self.flat_shape[1], activation=self.act, 
+                             kernel_initializer=d_init)    
+        print(net.shape)
+        net = tf.reshape(net, self.conv_shape)
+        print(net.shape)
+        # Convolutional Layers
+        for i in reversed(range(1, len(self.n_conv_m))):
+            net = tf.layers.conv2d_transpose(net,
+                filters = self.n_conv_m[i],
+                kernel_size = [self.n_conv_f[i], self.n_conv_f[i]],
+                strides =     [self.n_conv_s[i], self.n_conv_s[i]],
+                activation = self.act,
+                padding=self.n_conv_p[i],
+                kernel_initializer=c_init)
+            print(net.shape)
+        net = tf.layers.conv2d_transpose(net,
+            filters = 1,
+            kernel_size = [self.n_conv_f[0], self.n_conv_f[0]],
+            strides =     [self.n_conv_s[0], self.n_conv_s[0]],
+            activation = self.act,
+            padding=self.n_conv_p[0],
+            kernel_initializer=c_init)
+        print(net.shape)
+        net = tf.contrib.layers.flatten(net)        
+        print(net.shape)
+        return tf.sigmoid(net)
                 
     
     def feedforward(self):
@@ -208,7 +185,7 @@ class VariationalConvAutoencoder(object):
         Feedforward pass excluding last layer's transfer function.
         intermediate : index of intermediate layer for output generation
         """
-        net = self.X
+        net = self.image_X
 
         # ENCODER
         z_mu, z_log_sigma = self.encoder(net)
@@ -235,7 +212,7 @@ class VariationalConvAutoencoder(object):
         output = self.Y
         # p(x|z)        
         return - tf.reduce_sum((  target  ) * tf.log(output + 1e-10) +
-                               (1 - target) * tf.log(1 - output + 1e-10), 1)
+                               (1 - target) * tf.log(1 - output + 1e-10), -1)
 
     
     def get_kl(self):
@@ -336,17 +313,20 @@ class VariationalConvAutoencoder(object):
         # RECONSTRUCTION EXAMPLES
         f1 = self.plot_recon(save=True)
         
-        # LATENT SPACE RECONSTRUCTION
-        f2=None
-        if(self.n_latent==2):
-            f2 = self.plot_latent_recon(save=True)
+        # NOISY RECONSTRUCTION EXAMPLES
+        f2 = self.plot_noisy_recon(save=True)
         
-        # LATENT SPACE SCATTER
+        # LATENT SPACE RECONSTRUCTION
         f3=None
         if(self.n_latent==2):
-            f3 = self.plot_latent_repr(save=True)
+            f3 = self.plot_latent_recon(save=True)
         
-        return ell, f1, f2, f3
+        # LATENT SPACE SCATTER
+        f4=None
+        if(self.n_latent==2):
+            f4 = self.plot_latent_repr(save=True)
+        
+        return ell, f1, f2, f3, f4
         
     def serialize(self, path):
         '''Save the model in a file'''
@@ -368,18 +348,16 @@ class VariationalConvAutoencoder(object):
     def encode(self, input_vector):
         '''Encode the input into the Latent Space'''
         
-        _, _, _, z = self.session.run(self.feedforward,
+        z_m, z_l_o, z = self.session.run([self.z_mu, self.z_log_sigma, self.z],
                                 feed_dict={self.X: input_vector})
-        return z
+        return z, z_m, z_l_o
     
     def decode(self, z):
         '''Decode from the latent space into the out'''
-        
-        _, z_m, z_log_o = self.session.run(self.decode,
-                                feed_dict={self.X: input_vector})
-        return z_m, z_log_o
-    
-    
+        y = self.session.run(self.Y,
+                                feed_dict={self.z: z})
+        return z
+  
     def plot_recon(self, n_examples=20, save=False):
         '''Visualize Example Reconstrutions for the model'''
         
@@ -398,6 +376,26 @@ class VariationalConvAutoencoder(object):
         return fig
     
     
+    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+        '''Visualize Example Reconstrutions for the model'''
+        
+        xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = xs + np.random.normal(mean, var, xs.shape)
+        recon = self.session.run(self.Y, feed_dict={self.X: xs_noisy})
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for i in range(n_examples):
+            axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
+            axs[1][i].imshow(np.reshape(recon[i, ...], (28, 28)), cmap='gray')
+            axs[0][i].axis('off')
+            axs[1][i].axis('off')
+        
+        if(save):
+            fig.savefig(self.name+'_noisy_recon.png')
+        
+        return fig
+    
+    
+    
     def plot_latent_recon(self, n_examples=20, l_min=-3, l_max=3, save=False):        
         '''Visualize Reconstructions from the latent space'''
         
@@ -407,7 +405,8 @@ class VariationalConvAutoencoder(object):
         for img_j in np.linspace(l_max, l_min, n_examples):
             for img_i in np.linspace(l_min, l_max, n_examples):
                 z = np.array([[img_i, img_j]], dtype=np.float32)
-                recon = self.session.run(self.Y, feed_dict={self.z: z})
+                recon = self.session.run(self.Y, feed_dict={self.z: z,
+                                self.X: [mnist.test.images[0]]})
                 images.append(np.reshape(recon, (1, 28, 28, 1)))
         images = np.concatenate(images)
         

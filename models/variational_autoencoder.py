@@ -47,6 +47,7 @@ class VariationalAutoencoder(object):
 
         ## Initialize the session
         self.session = tf.InteractiveSession()
+        self.session.run(tf.global_variables_initializer())
     
         print("VAE "+self.name)
         self.print_network_size()
@@ -255,9 +256,6 @@ class VariationalAutoencoder(object):
         train_writer = tf.summary.FileWriter('logs/train', self.session.graph)
         test_writer = tf.summary.FileWriter('logs/test')        
         
-        ## Initialize all variables
-        self.session.run(tf.global_variables_initializer())
-        
         # Initial model print
         print("*MODEL [", self.name,"] {l_r: %.4f; n_iter: %d; batch: %d}"%\
               (learning_rate, epochs, batch_size))
@@ -353,6 +351,25 @@ class VariationalAutoencoder(object):
         _, z_m, z_log_o = self.session.run(self.decode,
                                 feed_dict={self.X: input_vector})
         return z_m, z_log_o
+    
+        
+    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+        '''Visualize Example Noisy Reconstrutions for the model'''
+        
+        xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = xs + np.random.normal(mean, var, xs.shape)
+        recon = self.session.run(self.Y, feed_dict={self.X: xs_noisy})
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for i in range(n_examples):
+            axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
+            axs[1][i].imshow(np.reshape(recon[i, ...], (28, 28)), cmap='gray')
+            axs[0][i].axis('off')
+            axs[1][i].axis('off')
+        
+        if(save):
+            fig.savefig(self.name+'_noisy_recon.png')
+        
+        return fig
     
     
     def plot_recon(self, n_examples=20, save=False):
