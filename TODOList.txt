@@ -12,8 +12,19 @@ TODO:
 -- Normal Autoencoder (incl. input and output neurons):
 --- [784, 32, 784]
 --- [784, 256, 128, 2, 128, 256, 784]
+--- [784, 256, 128, 3, 128, 256, 784]
+--- [784, 256, 128, 32, 128, 256, 784]
 --- [784, 128, 64, 2, 64, 128, 784]
+--- [784, 128, 64, 3, 64, 128, 784]
 --- [784, 128, 64, 32, 64, 128, 784]
+
+Things to compare:
+- TAKE TRAINING TIME!
+- COUNT PARAMETERS!
+- MODEL SIZE ON DISK (export variables, numpy matrix)
+- TEST LOG-LIKELIHOOD
+- LATENT SPACE VISUALIZATION
+- VISUAL RECONSTRUCTION QUALITY (W/ W/O DENOISING CAPABILITIES)
 
 -- Convolutional Autoencoder (take the architecture from BNN-Autoencoder-Convolutions notebook)
 --- Here we use a gaussian likelihood that needs to be compared
