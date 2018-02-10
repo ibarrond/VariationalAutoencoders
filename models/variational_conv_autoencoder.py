@@ -69,6 +69,29 @@ class VariationalConvAutoencoder(object):
         self.session = tf.InteractiveSession()
         self.session.run(tf.global_variables_initializer())
         
+        
+        
+    ## ---------------------------------------------------------------------            
+    ## ---------------- SAVING AND RESTORING MODEL VALUES ------------------
+    ## ---------------------------------------------------------------------
+        
+    def serialize(self, path):
+        '''Save the model in a file'''
+        
+        saver = tf.train.Saver()
+        save_path = saver.save(self.session, path+self.name)
+        print("Model saved in file: %s" % path+self.name)
+        
+        
+    def restore(self, path):
+        '''Restore the saved model'''
+        
+        saver = tf.train.Saver()   
+        sess = tf.InteractiveSession()
+        saver.restore(sess, save_path=path)
+        self.session = sess
+        print("Model restored from file: %s" % path)
+        
     ## ---------------------------------------------------------------------            
     ## --------------- TF WEIGHTS & BIASES INITIALIZATION ------------------
     ## ---------------------------------------------------------------------
@@ -292,7 +315,13 @@ class VariationalConvAutoencoder(object):
         train_writer.close()
         test_writer.close()
         
-    def benchmark(self, validation=False, batch_size = 128):
+                
+    ## ---------------------------------------------------------------------            
+    ## ----------------------------- TESTING -------------------------------
+    ## ---------------------------------------------------------------------
+    
+        
+    def benchmark(self, validation=False, mean=0, var=0.1, batch_size = 128):
         # TEST LOG LIKELIHOOD
         if validation:
             benchmark_data = mnist.validation
@@ -310,11 +339,31 @@ class VariationalConvAutoencoder(object):
             ell+= batch_ell/total_batch
         print("Model ", self.name, ". ", title, ell)
         
+        # NOISY TEST LOG LIKELIHOOD
+        if validation:
+            benchmark_data = mnist.validation
+            title = 'Validation LogLikelihood:'
+        else:
+            benchmark_data = mnist.test
+            title = 'Test LogLikelihood:'
+        
+        total_batch = int(mnist.train.num_examples/batch_size)
+        ell = 0.
+        for batch_i in range(total_batch):
+            xs, _ = benchmark_data.next_batch(batch_size)
+            xs_noisy = xs + np.random.normal(mean, var, xs.shape)
+            ys_noisy = self.session.run(self.Y,
+                   feed_dict={self.X: xs_noisy})
+            ell = self.session.run(self.ell,
+                   feed_dict={self.Y: ys_noisy, self.X: xs})
+            ell+= batch_ell/total_batch
+        print("Model ", self.name, ".  Noisy", title, ell)
+        
         # RECONSTRUCTION EXAMPLES
         f1 = self.plot_recon(save=True)
         
-        # NOISY RECONSTRUCTION EXAMPLES
-        f2 = self.plot_noisy_recon(save=True)
+        # RECONSTRUCTION NOISY EXAMPLES
+        f2 = self.plot_noisy_recon(save=True, mean=mean, var=var)
         
         # LATENT SPACE RECONSTRUCTION
         f3=None
@@ -324,27 +373,12 @@ class VariationalConvAutoencoder(object):
         # LATENT SPACE SCATTER
         f4=None
         if(self.n_latent==2):
-            f4 = self.plot_latent_repr(save=True)
+            f4= self.plot_latent_repr(save=True)
         
         return ell, f1, f2, f3, f4
         
-    def serialize(self, path):
-        '''Save the model in a file'''
         
-        saver = tf.train.Saver()
-        save_path = saver.save(self.session, path+self.name)
-        print("Model saved in file: %s" % path+self.name)
-        
-        
-    def restore(self, path):
-        '''Restore the saved model'''
-        
-        saver = tf.train.Saver()   
-        sess = tf.InteractiveSession()
-        saver.restore(sess, save_path=path)
-        self.session = sess
-        print("Model restored from file: %s" % path)
-    
+
     def encode(self, input_vector):
         '''Encode the input into the Latent Space'''
         
@@ -354,10 +388,18 @@ class VariationalConvAutoencoder(object):
     
     def decode(self, z):
         '''Decode from the latent space into the out'''
-        y = self.session.run(self.Y,
-                                feed_dict={self.z: z})
-        return z
+        recon = self.session.run(self.Y,
+                                feed_dict={self.z: z,
+                                          self.X: [mnist.test.images[0:np.shape(z)[0]]]})
+        return recon
   
+
+
+        
+    ## ---------------------------------------------------------------------            
+    ## ----------------------------- PLOTTING ------------------------------
+    ## ---------------------------------------------------------------------
+    
     def plot_recon(self, n_examples=20, save=False):
         '''Visualize Example Reconstrutions for the model'''
         
