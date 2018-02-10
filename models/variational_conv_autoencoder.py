@@ -351,7 +351,7 @@ class VariationalConvAutoencoder(object):
         ell = 0.
         for batch_i in range(total_batch):
             xs, _ = benchmark_data.next_batch(batch_size)
-            xs_noisy = xs + np.random.normal(mean, var, xs.shape)
+            xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
             ys_noisy = self.session.run(self.Y,
                    feed_dict={self.X: xs_noisy})
             ell = self.session.run(self.ell,
@@ -423,7 +423,7 @@ class VariationalConvAutoencoder(object):
         
         xs = mnist.test.next_batch(n_examples)[0]
         xs_noisy = xs + np.random.normal(mean, var, xs.shape)
-        recon = self.session.run(self.Y, feed_dict={self.X: xs_noisy})
+            xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for i in range(n_examples):
             axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
