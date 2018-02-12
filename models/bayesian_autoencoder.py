@@ -7,6 +7,9 @@ import numpy as np
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 class BayesianAutoencoder(object):
+    """
+    A tensorflow model of a bayesian neural auto-encoder.
+    """
     def __init__(self, name,
                  n_inputs=784,
                  n_neurons_encoder=[2048, 256],
@@ -27,7 +30,6 @@ class BayesianAutoencoder(object):
         self.N = tf.placeholder(tf.int32)
         self.L = tf.placeholder(tf.int32)
         
-        self.phase = tf.placeholder(tf.bool, name='phase')
         self.constant_prior = constant_prior
         
         ## Batch data placeholders
@@ -45,17 +47,17 @@ class BayesianAutoencoder(object):
 
         
     def create_weight_variable(self, shape, is_prior=False):
+        """
+        We initialize the weight distributions using xavier initialization.
+        Even the means are sampled from a truncated normal distribution with xavier variance.
+        """
         if self.constant_prior and is_prior:
             mean = tf.constant(0.0, shape=shape)
             log_var = tf.constant(0.0, shape=shape)
         else:
-            # mean = tf.Variable(tf.zeros(shape))
-            # log_var = tf.Variable(tf.zeros(shape))
             # xavier initialization
             log_var = tf.Variable(tf.ones(shape)) * tf.log(2./(shape[-1] + shape[-2]))
-            # log_var = tf.Variable(tf.ones(shape)) * (-5)
             mean = tf.Variable(tf.truncated_normal(shape, stddev=tf.sqrt(2./(shape[-1] + shape[-2]))))
-            # log_var = tf.Variable(tf.truncated_normal(shape, stddev=0.1))
             
         tf.summary.histogram('mean', mean)
         tf.summary.histogram('logvar', log_var)
@@ -83,7 +85,6 @@ class BayesianAutoencoder(object):
                     
                 with tf.name_scope("priors"):
                     prior_mean, prior_log_var = self.create_weight_variable([d_in, d_out], is_prior=True)
-                    # prior_mean, prior_log_var = self.create_weight_variable([1], is_prior=True)
                     prior_means.append(prior_mean)
                     prior_log_vars.append(prior_log_var)
                 with tf.name_scope("posts"):
@@ -102,7 +103,6 @@ class BayesianAutoencoder(object):
                 
                 with tf.name_scope("priors"):
                     prior_mean, prior_log_var = self.create_weight_variable([d_in, d_out], is_prior=True)
-                    # prior_mean, prior_log_var = self.create_weight_variable([1], is_prior=True)
                     prior_means.append(prior_mean)
                     prior_log_vars.append(prior_log_var)
                 with tf.name_scope("posts"):
@@ -114,7 +114,7 @@ class BayesianAutoencoder(object):
     
     def get_std_norm_samples(self, shape):
         """
-        Draws N(0,1) samples of dimension [d_in, d_out].
+        Draws N(0,1) samples of dimension shape.
         """
         return tf.random_normal(shape=shape)
 
@@ -129,11 +129,13 @@ class BayesianAutoencoder(object):
         z = self.get_std_norm_samples([mc_samples, d_in, d_out])
         ## division by 2 to obtain pure standard deviation
         w_from_q = tf.add(tf.multiply(z, tf.exp(log_var_W / 2)), mean_W)
-        # w_from_q = tf.add(tf.multiply(z, 1.0), mean_W)
 
         return w_from_q
     
     def encode(self, net):
+        """
+        Maps the inputs into the latent representation.
+        """
         with tf.name_scope("encoder"):
             for i in range(self.length_encoder):
                 W = self.sample_from_W(self.mean_W[i], self.log_var_W[i])
@@ -141,18 +143,19 @@ class BayesianAutoencoder(object):
                 bias = tf.expand_dims(W[:,0,:], 1)
                 net = net + bias
                 tf.summary.histogram('activations_l_' + str(i), net)
-                # don't tanh z, otherwise limited to -1,1
                 if i < self.length_encoder - 1:
-                    # net = tf.layers.batch_normalization(net, training=self.phase)
                     net = tf.nn.tanh(net)
                 else:
-                    # net = tf.nn.relu(net)
+                    # don't tanh z, otherwise latent space limited to -1,1
                     net = net
                 tf.summary.histogram('outputs_l_' + str(i), net)
         
         return net
     
     def decode(self, net):
+        """
+        Decodes the latent representation and reconstructs the output.
+        """
         w_off = self.length_encoder
         with tf.name_scope("decoder"):
             for i in range(w_off, w_off + self.length_decoder):
@@ -161,13 +164,10 @@ class BayesianAutoencoder(object):
                 bias = tf.expand_dims(W[:,0,:], 1)
                 net = net + bias
                 
-                # net = tf.layers.batch_normalization(net, training=self.phase)
-                
                 tf.summary.histogram('activations_l_' + str(i-w_off), net)
 
                 if i == (w_off + self.length_decoder - 1):
                     net = tf.nn.sigmoid(net)
-                    # net = net
                 else:
                     net = tf.nn.tanh(net)
                 tf.summary.histogram('outputs_l_' + str(i-w_off), net)
@@ -175,6 +175,9 @@ class BayesianAutoencoder(object):
         return net
     
     def feedforward(self):
+        """
+        Defines the whole feedforward pass through the autoencoder.
+        """
         # We will generate L output samples
         batch_size = tf.shape(self.X)[0]
         d_in = tf.shape(self.X)[-1]
@@ -198,6 +201,9 @@ class BayesianAutoencoder(object):
     """
         
     def get_ll(self, target, output):
+        """
+        Bernoulli Log-Likelihood.
+        """
         return tf.reduce_sum(
             target * tf.log(output + 1e-10) + \
             (1 - target) * tf.log(1 - output + 1e-10),
@@ -211,7 +217,6 @@ class BayesianAutoencoder(object):
         and average the log-likelihoods in the end (expectation approximation).
         """
         
-        # outputs, _, _, _ = self.feedforward()
         outputs = self.Y
         ll = self.get_ll(self.X, outputs)
         ell = tf.reduce_mean(ll, 0)
@@ -236,7 +241,8 @@ class BayesianAutoencoder(object):
 
     def get_kl_multi(self):
         """
-        Compute KL divergence between variational and prior using a multi-layer-network
+        Compute KL divergence between variational and prior using a multi-layer-network.
+        The KL-divergences of the layers are added up.
         """
         kl = 0
         
@@ -251,19 +257,24 @@ class BayesianAutoencoder(object):
         return kl
     
     def get_nelbo(self):
-        """ Returns the negative ELBOW, which allows us to minimize instead of maximize. """
+        """
+        Returns the negative ELBOW, which allows us to minimize instead of maximize.
+        """
         batch_size = tf.cast(tf.shape(self.X)[0], "float32")
         # the kl does not change among samples
         kl = self.get_kl_multi()
         ell = self.get_ell()
-        # batch_ell = tf.reduce_mean(tf.reduce_sum(ell, [-1]))
+        # The average batch ell is computed to allow benchmarking.
+        # It is not part of the nelbow.
         batch_ell = tf.reduce_mean(ell)
         nelbo = kl - tf.reduce_sum(ell) * tf.cast(self.N, "float32") / batch_size
-        # nelbo = -batch_ell
+
         return nelbo, kl, batch_ell
     
     def learn(self, learning_rate=0.01, epochs=50, batch_size=128, mc_samples=10):
-        """ Our learning procedure """
+        """
+        Our learning procedure.
+        """
         optimizer = tf.train.AdamOptimizer(learning_rate)
 
         ## Set all_variables to contain the complete set of TF variables to optimize
@@ -271,15 +282,6 @@ class BayesianAutoencoder(object):
 
         ## Define the optimizer
         train_step = optimizer.minimize(self.loss, var_list=all_variables)
-        # gradients = optimizer.compute_gradients(self.loss)
-
-        def ClipIfNotNone(grad):
-            if grad is None:
-                return grad
-            return tf.clip_by_value(grad, -1, 1)
-        # clipped_gradients = [(ClipIfNotNone(grad), var) for grad, var in gradients]
-        # train_step = optimizer.apply_gradients(clipped_gradients)
-        # train_step = optimizer.minimize(self.loss, var_list=all_variables)
 
         tf.summary.scalar('negative_elbo', self.loss)
         tf.summary.scalar('kl_div', self.kl)
@@ -316,7 +318,7 @@ class BayesianAutoencoder(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.L: mc_samples, self.N: mnist.train.num_examples, self.phase: True})
+                    feed_dict={self.X: batch_xs, self.L: mc_samples, self.N: mnist.train.num_examples})
                 train_writer.add_summary(summary, i)
                 train_cost += loss/num_batches
                 cum_ell += ell/num_batches
@@ -332,7 +334,12 @@ class BayesianAutoencoder(object):
         
         print("Total training time: ", time.time() - start_time)
     
-    def benchmark(self, validation=False, batch_size=128):
+    def benchmark(self, validation=False, batch_size=128, noisy=False, mean=0, var=0.1):
+        """
+        Computes validation/test log-likelihood for a trained model.
+        It also permits computing the log-likelihood after denoising.
+        """
+        
         # TEST LOG LIKELIHOOD
         if validation:
             benchmark_data = mnist.validation
@@ -340,35 +347,72 @@ class BayesianAutoencoder(object):
             benchmark_data = mnist.test
         
         total_batch = benchmark_data.num_examples // batch_size
-        ell = 0
+        ell = 0.
         for batch_i in range(total_batch):
             batch_xs, _ = benchmark_data.next_batch(batch_size)
             c = self.session.run(self.ell,
-                   feed_dict={self.X: batch_xs, self.L: 10, self.N: benchmark_data.num_examples, self.phase: False})
+                   feed_dict={self.X: batch_xs, self.L: 10, self.N: benchmark_data.num_examples})
+            ell+= c/total_batch
+            
+        if not noisy:
+            return ell
+            
+        # NOISY TEST LOG LIKELIHOOD
+        if validation:
+            benchmark_data = mnist.validation
+            title = 'Validation LogLikelihood:'
+        else:
+            benchmark_data = mnist.test
+            title = 'Test LogLikelihood:'
+        
+        total_batch = benchmark_data.num_examples // batch_size
+        ell = 0.
+        for batch_i in range(total_batch):
+            xs, _ = benchmark_data.next_batch(batch_size)
+            xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+            ys_noisy = self.session.run(self.Y,
+                   feed_dict={self.X: xs_noisy, self.L: 10, self.N: benchmark_data.num_examples})
+            c = self.session.run(self.ell,
+                   feed_dict={self.Y: ys_noisy, self.X: xs, self.L: 10, self.N: benchmark_data.num_examples})
             ell+= c/total_batch
         
         return ell
         
     def serialize(self, path):
+        """
+        Saves the model.
+        """
         saver = tf.train.Saver()
         save_path = saver.save(self.session, path)
         print("Model saved in file: %s" % save_path)
         
     def restore(self, path):
+        """
+        Restores a saved model.
+        """
         saver = tf.train.Saver()   
         sess = tf.Session()
         saver.restore(sess, save_path=path)
         self.session = sess
     
     def predict(self, batch):
+        """
+        Reconstructs a batch of inputs.
+        """
         outputs = self.Y
-        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.L: 10, self.N: 1, self.phase: False})
+        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.L: 10, self.N: 1})
     
     def get_weights(self):
+        """
+        Returns all weights for debugging.
+        """
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
         return self.session.run(weights)
     
     def plot_enc_dec(self, n_examples=10, save=False):
+        """
+        Shows n_examples inputs and their reconstructions.
+        """
         # Plot example reconstructions
         test_xs, _ = mnist.test.next_batch(n_examples)
         recon = self.predict(test_xs)
@@ -390,17 +434,38 @@ class BayesianAutoencoder(object):
             fig.savefig('images/'+self.name+'_recon.png')
         plt.show()
         
+    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+        """
+        Shows n_examples noisy inputs and their reconstructions.
+        """
         
-    def plot_latent_recon(self, min_val=-3, max_val=3, n_examples=20, save=False):        
-        '''Visualize Reconstructions from the latent space'''
+        xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        recon = self.predict(xs_noisy)
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for i in range(n_examples):
+            axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
+            axs[1][i].imshow(np.reshape(recon[i, ...], (28, 28)), cmap='gray')
+            axs[0][i].axis('off')
+            axs[1][i].axis('off')
+        
+        if(save):
+            fig.savefig('images/'+self.name+'_noisy_recon.png')
+        
+        return fig
+    
+    def plot_latent_recon(self, n_examples=20, l_min=-3, l_max=3, save=False):        
+        """
+        Visualizes reconstructions from the latent space in an overlay grid.
+        """
         
         # Reconstruct Images from equidistant latent representations
         images = []
         fig = plt.figure(figsize=(8,8))
-        for img_i in np.linspace(min_val, max_val, n_examples):
-            for img_j in np.linspace(min_val, max_val, n_examples):
+        for img_j in np.linspace(l_max, l_min, n_examples):
+            for img_i in np.linspace(l_min, l_max, n_examples):
                 z = np.array([[[img_i, img_j]]], dtype=np.float32)
-                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.L: 1, self.phase: False})
+                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.L: 1})
                 images.append(np.reshape(recon, (1, 28, 28, 1)))
         images = np.concatenate(images)
         
@@ -408,19 +473,18 @@ class BayesianAutoencoder(object):
         img_n = images.shape[0]
         img_h = images.shape[1]
         img_w = images.shape[2]
-        n_plots = int(np.ceil(np.sqrt(img_n)))
         m = np.ones(
-            (img_h * n_plots + n_plots + 1,
-             img_w * n_plots + n_plots + 1, 3)) * 0.5
+            (img_h * n_examples + n_examples + 1,
+             img_w * n_examples + n_examples + 1, 3)) * 0.5
 
-        for i in range(n_plots):
-            for j in range(n_plots):
-                this_filter = i * n_plots + j
+        for i in range(n_examples):
+            for j in range(n_examples):
+                this_filter = i * n_examples + j
                 if this_filter < img_n:
                     this_img = images[this_filter, ...]
                     m[1 + i + i * img_h:1 + i + (i + 1) * img_h,
                       1 + j + j * img_w:1 + j + (j + 1) * img_w, :] = this_img        
-        plt.imshow(m)
+        plt.imshow(m, extent=[l_min,l_max,l_min,l_max])
         
         if(save):
             fig.savefig('images/'+self.name+'_lat_recon.png')
@@ -428,9 +492,12 @@ class BayesianAutoencoder(object):
         return fig
     
     def plot_latent_repr(self, n_examples = 10000, save=False):
+        """
+        Visualizes the latent space in case 2-dimensional.
+        """
         # Plot manifold of latent layer
         xs, ys = mnist.test.next_batch(n_examples)
-        zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.L: 10, self.phase: False})
+        zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.L: 10})
         
         fig = plt.figure(figsize=(10, 8))
         

@@ -350,7 +350,7 @@ class VariationalAutoencoder(object):
             xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
             ys_noisy = self.session.run(self.Y,
                    feed_dict={self.X: xs_noisy})
-            ell = self.session.run(self.ell,
+            batch_ell = self.session.run(self.ell,
                    feed_dict={self.Y: ys_noisy, self.X: xs})
             ell+= batch_ell/total_batch
         print("Model ", self.name, ".  Noisy", title, ell)
