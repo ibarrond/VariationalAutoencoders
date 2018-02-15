@@ -434,6 +434,30 @@ class AAE(object):
         
         return fig
     
+    def plot_latent_repr(self, n_examples = 10000, save=False, noisy=False, mean=0, var=0.1):
+        # Plot manifold of latent layer
+        xs, ys = mnist.test.next_batch(n_examples)
+        # xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        
+        if noisy:
+            zs = self.session.run(self.encoder_output, feed_dict={self.x_input: xs_noisy, self.x_target: xs})
+        else:
+            zs = self.session.run(self.encoder_output, feed_dict={self.x_input: xs, self.x_target: xs})
+        
+        fig = plt.figure(figsize=(10, 8))
+        
+        plt.scatter(zs[:, 0], zs[:, 1], c=np.argmax(ys, 1), marker='o',
+                edgecolor='none', cmap=plt.cm.get_cmap('jet', 10))
+        plt.xlim([-6, 6])
+        plt.ylim([-6, 6])
+        plt.colorbar()
+        
+        if(save):
+            fig.savefig(self.name+'_lat_repr.png')
+        
+        return fig
+    
     def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
         """
         Shows n_examples noisy inputs and their reconstructions.

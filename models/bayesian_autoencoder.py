@@ -353,7 +353,7 @@ class BayesianAutoencoder(object):
         for batch_i in range(total_batch):
             batch_xs, _ = benchmark_data.next_batch(batch_size)
             c = self.session.run(self.ell,
-                   feed_dict={self.X: batch_xs, self.L: 10, self.N: benchmark_data.num_examples})
+                   feed_dict={self.X: batch_xs, self.L: 1, self.N: benchmark_data.num_examples})
             ell+= c/total_batch
             
         if not noisy:
@@ -373,9 +373,9 @@ class BayesianAutoencoder(object):
             xs, _ = benchmark_data.next_batch(batch_size)
             xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
             ys_noisy = self.session.run(self.Y,
-                   feed_dict={self.X: xs_noisy, self.L: 10, self.N: benchmark_data.num_examples})
+                   feed_dict={self.X: xs_noisy, self.L: 1, self.N: benchmark_data.num_examples})
             c = self.session.run(self.ell,
-                   feed_dict={self.Y: ys_noisy, self.X: xs, self.L: 10, self.N: benchmark_data.num_examples})
+                   feed_dict={self.Y: ys_noisy, self.X: xs, self.L: 1, self.N: benchmark_data.num_examples})
             ell+= c/total_batch
         
         return ell
@@ -402,7 +402,7 @@ class BayesianAutoencoder(object):
         Reconstructs a batch of inputs.
         """
         outputs = self.Y
-        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.L: 10, self.N: 1})
+        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.L: 1, self.N: len(batch)})
     
     def get_weights(self):
         """
@@ -493,13 +493,17 @@ class BayesianAutoencoder(object):
         
         return fig
     
-    def plot_latent_repr(self, n_examples = 10000, save=False):
+    def plot_latent_repr(self, n_examples = 10000, save=False, noisy=False, mean=0, var=0.1):
         """
         Visualizes the latent space in case 2-dimensional.
-        """
+        """        
         # Plot manifold of latent layer
         xs, ys = mnist.test.next_batch(n_examples)
-        zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.L: 10})
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        if noisy:
+            zs = self.session.run(self.z_exp, feed_dict={self.X: xs_noisy, self.L: 1})
+        else:
+            zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.L: 1})
         
         fig = plt.figure(figsize=(10, 8))
         

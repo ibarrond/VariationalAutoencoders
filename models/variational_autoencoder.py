@@ -113,19 +113,34 @@ class VariationalAutoencoder(object):
         W_decoder = []
         
         with tf.name_scope("Encoder_layer_weights"):
-            W_encoder.append(self.init_xavier(shape =[self.N, self.n_encoder[0]]))
-            for i in range(1, self.length_encoder):
-                W_encoder.append(self.init_xavier(shape =[self.n_encoder[i-1], self.n_encoder[i]]))
+            # W_encoder.append(self.init_xavier(shape =[self.N, self.n_encoder[0]]))
+            # for i in range(1, self.length_encoder):
+            for i in range(0, self.length_encoder):
+                if i == 0:
+                    W_encoder.append(self.init_xavier(shape =[self.N, self.n_encoder[0]]))
+                else:
+                    W_encoder.append(self.init_xavier(shape =[self.n_encoder[i-1], self.n_encoder[i]]))
         
         with tf.name_scope("Latent_layer_weights"):
-            W_latent_mu = self.init_xavier(shape =[self.n_encoder[-1], self.n_latent]) 
-            W_latent_log_sigma = self.init_xavier(shape =[self.n_encoder[-1], self.n_latent])      
+            if self.length_encoder > 0:
+                W_latent_mu = self.init_xavier(shape =[self.n_encoder[-1], self.n_latent]) 
+                W_latent_log_sigma = self.init_xavier(shape =[self.n_encoder[-1], self.n_latent])
+            else:
+                W_latent_mu = self.init_xavier(shape =[self.N, self.n_latent]) 
+                W_latent_log_sigma = self.init_xavier(shape =[self.N, self.n_latent])            
             
         with tf.name_scope("Decoder_layer_weights"):
-            W_decoder.append(self.init_xavier(shape=[self.n_latent, self.n_decoder[0]]))
-            for i in range(1, self.length_decoder):
-                W_decoder.append(self.init_xavier(shape=[self.n_decoder[i-1], self.n_decoder[i]]))
-            W_decoder.append(self.init_xavier(shape=[self.n_decoder[-1], self.N]))
+            # W_decoder.append(self.init_xavier(shape=[self.n_latent, self.n_decoder[0]]))
+            for i in range(0, self.length_decoder):
+                if i == 0:
+                    W_decoder.append(self.init_xavier(shape=[self.n_latent, self.n_decoder[0]]))
+                else:
+                    W_decoder.append(self.init_xavier(shape=[self.n_decoder[i-1], self.n_decoder[i]]))
+            
+            if self.length_decoder == 0:
+                W_decoder.append(self.init_xavier(shape=[self.n_latent, self.N]))
+            else:    
+                W_decoder.append(self.init_xavier(shape=[self.n_decoder[-1], self.N]))
         
         return W_encoder, W_latent_mu, W_latent_log_sigma, W_decoder
 
@@ -142,8 +157,8 @@ class VariationalAutoencoder(object):
         b_decoder = []
         
         with tf.name_scope("Encoder_layer_biases"):
-            b_encoder.append(self.init_xavier(shape=[self.n_encoder[0]]))
-            for i in range(1, self.length_encoder):
+            # b_encoder.append(self.init_xavier(shape=[self.n_encoder[0]]))
+            for i in range(0, self.length_encoder):
                 b_encoder.append(self.init_xavier(shape=[self.n_encoder[i]]))
         
         with tf.name_scope("Latent_layer_biases"):
@@ -151,9 +166,10 @@ class VariationalAutoencoder(object):
             b_latent_log_sigma = self.init_xavier(shape =[self.n_latent])      
             
         with tf.name_scope("Decoder_layer_biases"):
-            b_decoder.append(self.init_xavier(shape=[self.n_decoder[0]]))
-            for i in range(1, self.length_decoder):
+            # b_decoder.append(self.init_xavier(shape=[self.n_decoder[0]]))
+            for i in range(0, self.length_decoder):
                 b_decoder.append(self.init_xavier(shape=[self.n_decoder[i]]))
+                
             b_decoder.append(self.init_xavier(shape=[self.N]))
             
         return b_encoder, b_latent_mu, b_latent_log_sigma, b_decoder
@@ -195,8 +211,9 @@ class VariationalAutoencoder(object):
         
     def decoder(self, z):
         '''DECODER: transform a Latent Space representation into an image'''
-        net = self.activ(tf.matmul(z, self.W_dec[0]) + self.b_dec[0])
-        for i in range(1, self.length_decoder):
+        # net = self.activ(tf.matmul(z, self.W_dec[0]) + self.b_dec[0])
+        net = z
+        for i in range(0, self.length_decoder):
             net = self.activ(tf.matmul(net, self.W_dec[i]) + self.b_dec[i])
         
         return tf.nn.sigmoid(tf.matmul(net, self.W_dec[-1]) + self.b_dec[-1])        
@@ -277,7 +294,13 @@ class VariationalAutoencoder(object):
         merged = tf.summary.merge_all()
         
         train_writer = tf.summary.FileWriter('logs/train', self.session.graph)
-        test_writer = tf.summary.FileWriter('logs/test')        
+        test_writer = tf.summary.FileWriter('logs/test')
+        
+        ## Initialize all variables
+        init = tf.global_variables_initializer()
+
+        ## Initialize TF session
+        self.session.run(init)
         
         # Initial model print
         print("*MODEL [", self.name,"] {l_r: %.4f; n_iter: %d; batch: %d}"%\
@@ -395,7 +418,7 @@ class VariationalAutoencoder(object):
     ## ----------------------------- PLOTTING ------------------------------
     ## ---------------------------------------------------------------------
     
-    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+    def plot_noisy_recon(self, n_examples=10, mean=0, var=0.1, save=False):
         '''Visualize Example Noisy Reconstrutions for the model'''
         
         xs = mnist.test.next_batch(n_examples)[0]
@@ -414,7 +437,7 @@ class VariationalAutoencoder(object):
         return fig
     
     
-    def plot_recon(self, n_examples=20, save=False):
+    def plot_recon(self, n_examples=10, save=False):
         '''Visualize Example Reconstrutions for the model'''
         
         xs = mnist.test.next_batch(n_examples)[0]
@@ -432,7 +455,7 @@ class VariationalAutoencoder(object):
         return fig
     
     
-    def plot_latent_recon(self, n_examples=20, l_min=-3, l_max=3, save=False):        
+    def plot_latent_recon(self, n_examples=20, l_min=-6, l_max=6, save=False):        
         '''Visualize Reconstructions from the latent space'''
         
         # Reconstruct Images from equidistant latent representations
@@ -467,10 +490,16 @@ class VariationalAutoencoder(object):
         
         return fig
     
-    def plot_latent_repr(self, n_examples = 10000, save=False):
+    def plot_latent_repr(self, n_examples = 10000, save=False, noisy=False, mean=0, var=0.1):
         # Plot manifold of latent layer
         xs, ys = mnist.test.next_batch(n_examples)
-        zs = self.session.run(self.z, feed_dict={self.X: xs})
+        # xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        
+        if noisy:
+            zs = self.session.run(self.z, feed_dict={self.X: xs_noisy})
+        else:
+            zs = self.session.run(self.z, feed_dict={self.X: xs})
         
         fig = plt.figure(figsize=(10, 8))
         

@@ -1,0 +1,2 @@
+model_checkpoint_path: "VAE_32"
+all_model_checkpoint_paths: "VAE_32"
