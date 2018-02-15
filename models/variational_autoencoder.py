@@ -421,7 +421,7 @@ class VariationalAutoencoder(object):
     def plot_noisy_recon(self, n_examples=10, mean=0, var=0.1, save=False):
         '''Visualize Example Noisy Reconstrutions for the model'''
         
-        xs = mnist.test.next_batch(n_examples)[0]
+        xs = mnist.test.images[0:n_examples]
         xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
         recon = self.session.run(self.Y, feed_dict={self.X: xs_noisy})
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
@@ -440,7 +440,7 @@ class VariationalAutoencoder(object):
     def plot_recon(self, n_examples=10, save=False):
         '''Visualize Example Reconstrutions for the model'''
         
-        xs = mnist.test.next_batch(n_examples)[0]
+        xs = mnist.test.images[0:n_examples]
         recon = self.session.run(self.Y, feed_dict={self.X: xs})
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for i in range(n_examples):

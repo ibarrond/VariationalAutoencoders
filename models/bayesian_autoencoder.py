@@ -416,7 +416,7 @@ class BayesianAutoencoder(object):
         Shows n_examples inputs and their reconstructions.
         """
         # Plot example reconstructions
-        test_xs, _ = mnist.test.next_batch(n_examples)
+        test_xs = mnist.test.images[0:n_examples]
         recon = self.predict(test_xs)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for example_i in range(n_examples):
@@ -441,7 +441,7 @@ class BayesianAutoencoder(object):
         Shows n_examples noisy inputs and their reconstructions.
         """
         
-        xs = mnist.test.next_batch(n_examples)[0]
+        xs = mnist.test.images[0:n_examples]
         xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
         recon = self.predict(xs_noisy)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))

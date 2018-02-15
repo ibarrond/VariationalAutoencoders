@@ -396,7 +396,7 @@ class AAE(object):
         """
         Shows n_examples inputs and their reconstructions.
         """
-        test_xs, _ = mnist.test.next_batch(n_examples)
+        test_xs = mnist.test.images[0:n_examples]
         recon = self.predict(test_xs)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for example_i in range(n_examples):
@@ -420,7 +420,7 @@ class AAE(object):
         """
         Visualizes the latent space in case 2-dimensional.
         """
-        xs, ys = mnist.test.next_batch(n_examples)
+        xs = mnist.test.images[0:n_examples]
         zs = self.session.run(self.encoder_output, feed_dict={self.x_input: xs, self.x_target: xs})
         
         fig = plt.figure(figsize=(10, 8))
@@ -436,7 +436,7 @@ class AAE(object):
     
     def plot_latent_repr(self, n_examples = 10000, save=False, noisy=False, mean=0, var=0.1):
         # Plot manifold of latent layer
-        xs, ys = mnist.test.next_batch(n_examples)
+        xs = mnist.test.images[0:n_examples]
         # xs = mnist.test.next_batch(n_examples)[0]
         xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
         

@@ -406,7 +406,7 @@ class BayesianVAE(object):
     
     def plot_enc_dec(self, n_examples=10, save=False):
         # Plot example reconstructions
-        test_xs, _ = mnist.test.next_batch(n_examples)
+        xs = mnist.test.images[0:n_examples]
         recon = self.predict(test_xs)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for example_i in range(n_examples):
