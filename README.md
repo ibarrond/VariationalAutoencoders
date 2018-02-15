@@ -35,31 +35,31 @@ The dataset can directly be downloaded using the tensorflow python library.
 Each notebook contains runs for one specific model from the models folder.
 The runs have aligned architectures and plots of the latent space.
 
-* Bayesian Neural Network.ipynb: TensorFlow experiments with a generic bayesian neural network (no autoencoder)
-* Bayesian-VAE.ipynb: Notebook for bayesian_vae.py
-* BNN-Autoencoder.ipynb: Notebook for bayesian_autoencoder.py
-* BNN-Autoencoder-Convolutions.ipynb: Notebook for bayesian_conv_autoencoder.py
-* BNN-VAE-Artificial.ipynb: Notebook for bayesian_vae_artificial.py
-* GAN.ipynb: Notebook for GAN.py
-* PlainAE.ipynb: Vanilla Autoencoder (nothing bayesian)
-* PlainCAE.ipynb: Autoencoder with convolutions (non-bayesian)
+* **Bayesian Neural Network.ipynb:** TensorFlow experiments with a generic bayesian neural network (no autoencoder)
+* **Bayesian-VAE.ipynb:** Notebook for bayesian_vae.py
+* **BNN-Autoencoder.ipynb:** Notebook for bayesian_autoencoder.py
+* **BNN-Autoencoder-Convolutions.ipynb:** Notebook for bayesian_conv_autoencoder.py
+* **BNN-VAE-Artificial.ipynb:** Notebook for bayesian_vae_artificial.py
+* **GAN.ipynb:** Notebook for GAN.py
+* **PlainAE.ipynb:** Vanilla Autoencoder (nothing bayesian)
+* **PlainCAE.ipynb:** Autoencoder with convolutions (non-bayesian)
 
 ## Autoencoder Model Structure
-* __init__: Sets up the weights and the computational graph for the model
-* sample_from_W: Samples from the variational distribution over the weights
-* encode: The encoder function of the autoencoder
-* decode: The decoder function of the autoencoder
-* feedforward: Describes the full model architecture using _encode_ and _decode_
-* get_ll: The log-likelihood per sample
-* get_ell: The expected log-likelihood approximated by monte carlo sampling
-* get_kl: The KL-divergence between the variational distribution and the prior
-* get_nelbo: Get the negative Eidence Lower Bound (ELBO) - the optimization objective
-* learn: The training procedure
-* benchmark: Compute validation/test error
-* serialize: Store the trained model on disk
-* restore: Restore a trained model from disk
-* get_weights: Return the models weights for inspection
-* plot_enc_dec: Plot inputs vs. their reconstructions
-* plot_noisy_recon: Plot inputs with added gaussian noise and their reconstructions
-* plot_latent_repr: Plot the encodings of the test data if 2-dimensional
-* plot_latent_recon: Plot a uniformly sampled reconstruction of the encodings of the test data
+* **\__init\__:** Sets up the weights and the computational graph for the model
+* **sample_from_W:** Samples from the variational distribution over the weights
+* **encode:** The encoder function of the autoencoder
+* **decode:** The decoder function of the autoencoder
+* **feedforward:** Describes the full model architecture using _encode_ and _decode_
+* **get_ll:** The log-likelihood per sample
+* **get_ell:** The expected log-likelihood approximated by monte carlo sampling
+* **get_kl:** The KL-divergence between the variational distribution and the prior
+* **get_nelbo:** Get the negative Eidence Lower Bound (ELBO) - the optimization objective
+* **learn:** The training procedure
+* **benchmark:** Compute validation/test error
+* **serialize:** Store the trained model on disk
+* **restore:** Restore a trained model from disk
+* **get_weights:** Return the models weights for inspection
+* **plot_enc_dec:** Plot inputs vs. their reconstructions
+* **plot_noisy_recon:** Plot inputs with added gaussian noise and their reconstructions
+* **plot_latent_repr:** Plot the encodings of the test data if 2-dimensional
+* **plot_latent_recon:** Plot a uniformly sampled reconstruction of the encodings of the test data
