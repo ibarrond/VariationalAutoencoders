@@ -28,6 +28,9 @@ def lrelu(x, leak=0.2, name="lrelu"):
         return f1 * x + f2 * abs(x)
 
 class BayesianConvAutoencoder(object):
+    """
+    A convolutional bayesian autoencoder.
+    """
     def __init__(self, name, mc_samples, constant_prior=False):
         # SIZES
         tf.reset_default_graph()
@@ -48,8 +51,6 @@ class BayesianConvAutoencoder(object):
         with tf.name_scope('input_reshape'):
             self.X_reshaped = tf.reshape(self.X, [-1, 28, 28, 1])
             tf.summary.image('input', self.X_reshaped, 10)
-            
-        self.phase = tf.placeholder(tf.bool, name='phase')
 
         self.weights = {}
         
@@ -62,6 +63,9 @@ class BayesianConvAutoencoder(object):
         self.loss, self.kl, self.ell, self.Y_exp, self.z_exp = self.get_nelbo()
         
     def add_weights(self, shape, bias_shape, name):
+        """
+        Adds a set of gaussian distributed weights (priors and posteriors) to the model.
+        """
         
         fan_in = shape[0] if len(shape) == 2 else np.prod(shape[1:])
         fan_out = shape[1] if len(shape) == 2 else shape[0]
@@ -99,11 +103,19 @@ class BayesianConvAutoencoder(object):
             #tf.summary.histogram('posterior_mean', self.weights[name]['post_mean'])
             #tf.summary.histogram('posterior_logvar', self.weights[name]['post_log_var'])
             
-    def initialize_model_weights(self):        
+    def initialize_model_weights(self):
+        """
+        Defines the model's weight structure.
+        """
+        
         # convolution
         self.add_weights([3, 3, 1, 10], [10], 'W_conv1')
         self.add_weights([3, 3, 10, 10], [10], 'W_conv2')
         self.add_weights([3, 3, 10, 10], [10], 'W_conv3')
+        
+        # hidden fully connected
+        self.add_weights([160, 2], [2], 'enc_to_hidden')
+        self.add_weights([2, 160], [160], 'hidden_to_dec')
         
         # "deconvolution"
         self.add_weights([3, 3, 10, 10], [10], 'W_conv4')
@@ -140,8 +152,7 @@ class BayesianConvAutoencoder(object):
     
     def feedforward(self):
         """
-        Feedforward pass excluding last layer's transfer function.
-        intermediate : index of intermediate layer for output generation
+        Defines the model's forward pass.
         """
         
         Y_exp = 0
@@ -182,8 +193,22 @@ class BayesianConvAutoencoder(object):
             #outputs = tf.layers.batch_normalization(outputs, training=self.phase)
             outputs = lrelu(outputs)
             
+            outputs = tf.contrib.layers.flatten(outputs)
+            
+            W = self.sample_from_W('enc_to_hidden')
+            W_bias = self.sample_from_W('enc_to_hidden', bias=True)
+            
+            outputs = tf.matmul(outputs, W) + W_bias
+            
             # Latent representation
             z = outputs
+            
+            W = self.sample_from_W('hidden_to_dec')
+            W_bias = self.sample_from_W('hidden_to_dec', bias=True)
+            
+            outputs = tf.matmul(outputs, W) + W_bias
+            
+            outputs = tf.reshape(outputs, [-1, 4, 4, 10])
             
             # DECODING
             W = self.sample_from_W('W_conv4')
@@ -223,10 +248,13 @@ class BayesianConvAutoencoder(object):
             outputs = tf.sigmoid(outputs)
             # outputs = lrelu(outputs)
 
-            yield tf.contrib.layers.flatten(outputs), tf.contrib.layers.flatten(z)
+            yield tf.contrib.layers.flatten(outputs), z
 
     # Bernoulli Likelihood
     def get_ll(self, target, output):
+        """
+        Bernoulli Log-Likelihood.
+        """
         return tf.reduce_sum(
             target * tf.log(output + 1e-10) + \
             (1 - target) * tf.log(1 - output + 1e-10),
@@ -262,7 +290,7 @@ class BayesianConvAutoencoder(object):
             # log_p_per_sample = tf.reduce_mean(tf.reduce_sum(self.Y * tf.log(y), reduction_indices=[1]))
             # soft_max_cross_entropy_with_logits is a numerically stable version of cross entropy
             # log_p_per_sample = tf.reduce_mean(-tf.nn.softmax_cross_entropy_with_logits(logits=output, labels=self.Y))
-            ell += self.get_ll(self.X, output_y) / self.L
+            ell += self.get_ll(self.Y, output_y) / self.L
             y_exp += output_y / self.L
             z_exp += output_z / self.L
             
@@ -314,14 +342,14 @@ class BayesianConvAutoencoder(object):
         # the kl does not change among samples
         kl = self.get_kl_multi()
         ell, y_exp, z_exp = self.get_ell()
-        # batch_ell = tf.reduce_mean(tf.reduce_sum(ell, [-1]))
+
         batch_ell = tf.reduce_mean(ell)
         nelbo = kl - tf.reduce_sum(ell) * tf.cast(self.N, "float32") / batch_size
-        # nelbo = -batch_ell
+
         return nelbo, kl, batch_ell, y_exp, z_exp
     
     def learn(self, learning_rate=0.01, epochs=50, batch_size=128, mc_samples=10):
-        """ Our learning procedure """
+        """ Our learning procedure. """
         self.L = mc_samples
         
         optimizer = tf.train.AdamOptimizer(learning_rate)
@@ -331,15 +359,6 @@ class BayesianConvAutoencoder(object):
 
         ## Define the optimizer
         train_step = optimizer.minimize(self.loss, var_list=all_variables)
-        # gradients = optimizer.compute_gradients(self.loss)
-
-        def ClipIfNotNone(grad):
-            if grad is None:
-                return grad
-            return tf.clip_by_value(grad, -1, 1)
-        # clipped_gradients = [(ClipIfNotNone(grad), var) for grad, var in gradients]
-        # train_step = optimizer.apply_gradients(clipped_gradients)
-        # train_step = optimizer.minimize(self.loss, var_list=all_variables)
 
         tf.summary.scalar('negative_elbo', self.loss)
         tf.summary.scalar('kl_div', self.kl)
@@ -358,8 +377,9 @@ class BayesianConvAutoencoder(object):
         
         num_batches = mnist.train.num_examples // batch_size
 
+        start_time = time.time()
+        
         for i in range(epochs):
-            start_time = time.time()
             train_cost = 0
             cum_ell = 0
             cum_kl = 0
@@ -375,7 +395,7 @@ class BayesianConvAutoencoder(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.N: mnist.train.num_examples, self.phase: True})
+                    feed_dict={self.X: batch_xs, self.Y: batch_xs, self.N: mnist.train.num_examples})
                 train_writer.add_summary(summary, i)
                 train_cost += loss/num_batches
                 cum_ell += ell/num_batches
@@ -389,7 +409,13 @@ class BayesianConvAutoencoder(object):
         train_writer.close()
         test_writer.close()
         
-    def benchmark(self, validation=False, batch_size=128):
+        print("Total training time: ", time.time() - start_time)
+        
+    def benchmark(self, validation=False, batch_size=128, noisy=False, mean=0, var=0.1):
+        """
+        Computes validation/test log-likelihood for a trained model.
+        It also permits computing the log-likelihood after denoising.
+        """
         self.L = 10
         
         # TEST LOG LIKELIHOOD
@@ -399,37 +425,73 @@ class BayesianConvAutoencoder(object):
             benchmark_data = mnist.test
         
         total_batch = benchmark_data.num_examples // batch_size
-        ell = 0
+        ell = 0.
         for batch_i in range(total_batch):
             batch_xs, _ = benchmark_data.next_batch(batch_size)
             c = self.session.run(self.ell,
-                   feed_dict={self.X: batch_xs, self.N: benchmark_data.num_examples, self.phase: False})
+                   feed_dict={self.X: batch_xs, self.Y: batch_xs, self.N: benchmark_data.num_examples})
+            ell+= c/total_batch
+            
+        if not noisy:
+            return ell
+            
+        # NOISY TEST LOG LIKELIHOOD
+        if validation:
+            benchmark_data = mnist.validation
+            title = 'Validation LogLikelihood:'
+        else:
+            benchmark_data = mnist.test
+            title = 'Test LogLikelihood:'
+        
+        total_batch = benchmark_data.num_examples // batch_size
+        ell = 0.
+        for batch_i in range(total_batch):
+            xs, _ = benchmark_data.next_batch(batch_size)
+            xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+            #ys_noisy = self.session.run(self.Y_exp,
+            #       feed_dict={self.X: xs_noisy, self.N: benchmark_data.num_examples})
+            #c = self.session.run(self.ell,
+            #       feed_dict={self.Y_exp: ys_noisy, self.X: xs, self.N: benchmark_data.num_examples})
+            c = self.session.run(self.ell,  feed_dict={self.X: xs_noisy, self.Y: xs, self.N: benchmark_data.num_examples})
             ell+= c/total_batch
         
         return ell
         
     def serialize(self, path):
+        """
+        Saves the model.
+        """
         saver = tf.train.Saver()
         save_path = saver.save(self.session, path)
         print("Model saved in file: %s" % save_path)
         
     def restore(self, path):
+        """
+        Restores a saved model.
+        """
         saver = tf.train.Saver()   
         sess = tf.Session()
         saver.restore(sess, save_path=path)
         self.session = sess
     
     def predict(self, batch):
+        """
+        Reconstructs a batch of inputs.
+        """
+        #outputs = self.Y
         self.L = 10
-        
-        outputs = self.Y
-        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.N: 1, self.phase: False})
+        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.N: 1})
     
     def get_weights(self):
+        """
+        Returns all weights for debugging.
+        """
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
-        return self.session.run(weights)
     
     def plot_enc_dec(self, n_examples=10, save=False):
+        """
+        Shows n_examples inputs and their reconstructions.
+        """
         # Plot example reconstructions
         test_xs, _ = mnist.test.next_batch(n_examples)
         recon = self.predict(test_xs)
@@ -451,18 +513,40 @@ class BayesianConvAutoencoder(object):
             fig.savefig('images/'+self.name+'_recon.png')
         plt.show()
         
+    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+        """
+        Shows n_examples noisy inputs and their reconstructions.
+        """
         
-    def plot_latent_recon(self, min_val=-3, max_val=3, n_examples=20, save=False):        
-        '''Visualize Reconstructions from the latent space'''
+        xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        recon = self.predict(xs_noisy)
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for i in range(n_examples):
+            axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
+            axs[1][i].imshow(np.reshape(recon[i, ...], (28, 28)), cmap='gray')
+            axs[0][i].axis('off')
+            axs[1][i].axis('off')
+        
+        if(save):
+            fig.savefig('images/'+self.name+'_noisy_recon.png')
+        
+        return fig
+    
+    def plot_latent_recon(self, n_examples=20, l_min=-3, l_max=3, save=False):        
+        """
+        Visualizes reconstructions from the latent space in an overlay grid.
+        """
+        
         self.L = 1
         
         # Reconstruct Images from equidistant latent representations
         images = []
         fig = plt.figure(figsize=(8,8))
-        for img_i in np.linspace(min_val, max_val, n_examples):
-            for img_j in np.linspace(min_val, max_val, n_examples):
-                z = np.array([[[img_i, img_j]]], dtype=np.float32)
-                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.phase: False})
+        for img_j in np.linspace(l_max, l_min, n_examples):
+            for img_i in np.linspace(l_min, l_max, n_examples):
+                z = np.array([[img_i, img_j]], dtype=np.float32)
+                recon = self.session.run(self.Y_exp, feed_dict={self.z_exp: z})
                 images.append(np.reshape(recon, (1, 28, 28, 1)))
         images = np.concatenate(images)
         
@@ -470,19 +554,18 @@ class BayesianConvAutoencoder(object):
         img_n = images.shape[0]
         img_h = images.shape[1]
         img_w = images.shape[2]
-        n_plots = int(np.ceil(np.sqrt(img_n)))
         m = np.ones(
-            (img_h * n_plots + n_plots + 1,
-             img_w * n_plots + n_plots + 1, 3)) * 0.5
+            (img_h * n_examples + n_examples + 1,
+             img_w * n_examples + n_examples + 1, 3)) * 0.5
 
-        for i in range(n_plots):
-            for j in range(n_plots):
-                this_filter = i * n_plots + j
+        for i in range(n_examples):
+            for j in range(n_examples):
+                this_filter = i * n_examples + j
                 if this_filter < img_n:
                     this_img = images[this_filter, ...]
                     m[1 + i + i * img_h:1 + i + (i + 1) * img_h,
                       1 + j + j * img_w:1 + j + (j + 1) * img_w, :] = this_img        
-        plt.imshow(m)
+        plt.imshow(m, extent=[l_min,l_max,l_min,l_max])
         
         if(save):
             fig.savefig('images/'+self.name+'_lat_recon.png')
@@ -490,10 +573,14 @@ class BayesianConvAutoencoder(object):
         return fig
     
     def plot_latent_repr(self, n_examples = 10000, save=False):
-        self.L = 10
+        """
+        Visualizes the latent space in case 2-dimensional.
+        """
+        
+        self.L = 1
         # Plot manifold of latent layer
         xs, ys = mnist.test.next_batch(n_examples)
-        zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.phase: False})
+        zs = self.session.run(self.z_exp, feed_dict={self.X: xs})
         
         fig = plt.figure(figsize=(10, 8))
         

@@ -23,7 +23,7 @@ class AAE(object):
                  n_neurons_decoder=[256, 2048]):
         tf.reset_default_graph()
         
-        self.name = 'AAE'
+        self.name = name
         self.n_inputs = n_inputs
         self.n_encoder = [n_inputs] + n_neurons_encoder + [n_latent]
         self.n_decoder = [n_latent] + n_neurons_decoder + [n_inputs]
@@ -271,9 +271,9 @@ class AAE(object):
         saver = tf.train.Saver()
         step = 0
 
-        tensorboard_path, saved_model_path, log_path = self.form_results()
+        # tensorboard_path, saved_model_path, log_path = self.form_results()
         self.session.run(init)
-        writer = tf.summary.FileWriter(logdir=tensorboard_path, graph=self.session.graph)
+        # writer = tf.summary.FileWriter(logdir=tensorboard_path, graph=self.session.graph)
         for i in range(n_epochs):
             n_batches = int(mnist.train.num_examples / batch_size)
             print("------------------Epoch {}/{}------------------".format(i, n_epochs))
@@ -285,6 +285,7 @@ class AAE(object):
                          feed_dict={self.x_input: batch_x, self.x_target: batch_x, self.real_distribution: z_real_dist})
                 self.session.run(generator_optimizer, feed_dict={self.x_input: batch_x, self.x_target: batch_x})
                 
+                """
                 if b % 50 == 0:
                     a_loss, d_loss, g_loss, summary = self.session.run(
                         [autoencoder_loss, dc_loss, generator_loss, summary_op],
@@ -297,11 +298,15 @@ class AAE(object):
                         log.write("Discriminator Loss: {}\n".format(d_loss))
                         log.write("Generator Loss: {}\n".format(g_loss))
                 step += 1
-
+                """
+            a_loss, d_loss, g_loss, summary = self.session.run(
+                    [autoencoder_loss, dc_loss, generator_loss, summary_op],
+                    feed_dict={self.x_input: batch_x, self.x_target: batch_x,
+                               self.real_distribution: z_real_dist})
             print("Autoencoder Loss: {}".format(a_loss))
             print("Discriminator Loss: {}".format(d_loss))
             print("Generator Loss: {}".format(g_loss))
-            saver.save(self.session, save_path=saved_model_path, global_step=step)
+            #saver.save(self.session, save_path=saved_model_path, global_step=step)
             
     def debug(self):
         with tf.variable_scope(tf.get_variable_scope()):
@@ -328,6 +333,50 @@ class AAE(object):
                                    feed_dict={self.x_input: batch_xs, self.x_target: batch_xs})
         return cost / (benchmark_data.num_examples // batch_size)
     
+    def benchmark(self, validation=False, batch_size=128, noisy=False, mean=0, var=0.1):
+        """
+        Computes validation/test log-likelihood for a trained model.
+        It also permits computing the log-likelihood after denoising.
+        """
+        
+        # TEST LOG LIKELIHOOD
+        if validation:
+            benchmark_data = mnist.validation
+        else:
+            benchmark_data = mnist.test
+        
+        total_batch = benchmark_data.num_examples // batch_size
+        ell = 0.
+        for batch_i in range(total_batch):
+            batch_xs, _ = benchmark_data.next_batch(batch_size)
+            c = self.session.run(self.ae_loss,
+                   feed_dict={self.x_input: batch_xs, self.x_target: batch_xs})
+            ell+= c/total_batch
+            
+        if not noisy:
+            return ell
+            
+        # NOISY TEST LOG LIKELIHOOD
+        if validation:
+            benchmark_data = mnist.validation
+            title = 'Validation LogLikelihood:'
+        else:
+            benchmark_data = mnist.test
+            title = 'Test LogLikelihood:'
+        
+        total_batch = benchmark_data.num_examples // batch_size
+        ell = 0.
+        for batch_i in range(total_batch):
+            xs, _ = benchmark_data.next_batch(batch_size)
+            xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0, 1)
+            ys_noisy = self.session.run(self.decoder_output,
+                   feed_dict={self.x_input: xs_noisy})
+            c = self.session.run(self.ae_loss,
+                   feed_dict={self.x_target: ys_noisy, self.x_input: xs})
+            ell+= c/total_batch
+        
+        return ell
+    
     def predict(self, batch):
         outputs = self.decoder_output
         return self.session.run(outputs, feed_dict={self.x_input: batch, self.x_target: batch})
@@ -344,7 +393,9 @@ class AAE(object):
         self.session = sess
     
     def plot_enc_dec(self, n_examples=10, save=False):
-        # Plot example reconstructions
+        """
+        Shows n_examples inputs and their reconstructions.
+        """
         test_xs, _ = mnist.test.next_batch(n_examples)
         recon = self.predict(test_xs)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
@@ -366,7 +417,9 @@ class AAE(object):
         plt.show()
         
     def plot_latent_repr(self, n_examples=10000, save=False):
-        # Plot manifold of latent layer
+        """
+        Visualizes the latent space in case 2-dimensional.
+        """
         xs, ys = mnist.test.next_batch(n_examples)
         zs = self.session.run(self.encoder_output, feed_dict={self.x_input: xs, self.x_target: xs})
         
@@ -381,14 +434,36 @@ class AAE(object):
         
         return fig
     
-    def plot_latent_recon(self, min_val=-3, max_val=3, n_examples=20, save=False):        
-        '''Visualize Reconstructions from the latent space'''
+    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+        """
+        Shows n_examples noisy inputs and their reconstructions.
+        """
+        
+        xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        recon = self.predict(xs_noisy)
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for i in range(n_examples):
+            axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
+            axs[1][i].imshow(np.reshape(recon[i, ...], (28, 28)), cmap='gray')
+            axs[0][i].axis('off')
+            axs[1][i].axis('off')
+        
+        if(save):
+            fig.savefig('images/'+self.name+'_noisy_recon.png')
+        
+        return fig
+    
+    def plot_latent_recon(self, n_examples=20, l_min=-3, l_max=3, save=False):        
+        """
+        Visualizes reconstructions from the latent space in an overlay grid.
+        """
         
         # Reconstruct Images from equidistant latent representations
         images = []
         fig = plt.figure(figsize=(8,8))
-        for img_i in np.linspace(min_val, max_val, n_examples):
-            for img_j in np.linspace(min_val, max_val, n_examples):
+        for img_j in np.linspace(l_max, l_min, n_examples):
+            for img_i in np.linspace(l_min, l_max, n_examples):
                 z = np.array([[img_i, img_j]], dtype=np.float32)
                 recon = self.session.run(self.decoder_output, feed_dict={self.encoder_output: z})
                 images.append(np.reshape(recon, (1, 28, 28, 1)))
@@ -398,19 +473,18 @@ class AAE(object):
         img_n = images.shape[0]
         img_h = images.shape[1]
         img_w = images.shape[2]
-        n_plots = int(np.ceil(np.sqrt(img_n)))
         m = np.ones(
-            (img_h * n_plots + n_plots + 1,
-             img_w * n_plots + n_plots + 1, 3)) * 0.5
+            (img_h * n_examples + n_examples + 1,
+             img_w * n_examples + n_examples + 1, 3)) * 0.5
 
-        for i in range(n_plots):
-            for j in range(n_plots):
-                this_filter = i * n_plots + j
+        for i in range(n_examples):
+            for j in range(n_examples):
+                this_filter = i * n_examples + j
                 if this_filter < img_n:
                     this_img = images[this_filter, ...]
                     m[1 + i + i * img_h:1 + i + (i + 1) * img_h,
                       1 + j + j * img_w:1 + j + (j + 1) * img_w, :] = this_img        
-        plt.imshow(m)
+        plt.imshow(m, extent=[l_min,l_max,l_min,l_max])
         
         if(save):
             fig.savefig('images/'+self.name+'_lat_recon.png')

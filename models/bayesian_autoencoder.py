@@ -268,6 +268,8 @@ class BayesianAutoencoder(object):
         # It is not part of the nelbow.
         batch_ell = tf.reduce_mean(ell)
         nelbo = kl - tf.reduce_sum(ell) * tf.cast(self.N, "float32") / batch_size
+        # nelbo using independence assumption of log likelihood (like in auto-encoding variational bayes)
+        # nelbo = kl - batch_ell
 
         return nelbo, kl, batch_ell
     
