@@ -27,8 +27,7 @@ class BayesianVAE(object):
         ## Set the number of Monte Carlo samples as a placeholder so that it can be different for training and test
         self.N = tf.placeholder(tf.int32)
         self.L = tf.placeholder(tf.int32)
-        
-        self.phase = tf.placeholder(tf.bool, name='phase')
+
         self.constant_prior = constant_prior
         
         ## Batch data placeholders
@@ -213,8 +212,8 @@ class BayesianVAE(object):
         net = tf.multiply(tf.ones([self.L, batch_size, d_in]), self.X)
         
         z_mu, z_log_sigma = self.encode(net)
-        # z_mu_exp = tf.reduce_mean(z_mu, 0)
-        # z_log_sigma_exp = tf.reduce_mean(z_log_sigma, 0)
+        z_mu_exp = tf.reduce_mean(z_mu, 0)
+        z_log_sigma_exp = tf.reduce_mean(z_log_sigma, 0)
         
         z = self.sample_from_Z(z_mu, z_log_sigma)
         z_exp = tf.reduce_mean(z, 0)
@@ -354,7 +353,7 @@ class BayesianVAE(object):
 
                 _, loss, ell, kl, summary = self.session.run(
                     [train_step, self.loss, self.ell, self.kl, merged],
-                    feed_dict={self.X: batch_xs, self.L: mc_samples, self.N: mnist.train.num_examples, self.phase: True})
+                    feed_dict={self.X: batch_xs, self.L: mc_samples, self.N: mnist.train.num_examples})
                 train_writer.add_summary(summary, i)
                 train_cost += loss/num_batches
                 cum_ell += ell/num_batches
@@ -368,7 +367,12 @@ class BayesianVAE(object):
         train_writer.close()
         test_writer.close()
     
-    def benchmark(self, validation=False, batch_size=128):
+    def benchmark(self, validation=False, batch_size=128, noisy=False, mean=0, var=0.1):
+        """
+        Computes validation/test log-likelihood for a trained model.
+        It also permits computing the log-likelihood after denoising.
+        """
+        
         # TEST LOG LIKELIHOOD
         if validation:
             benchmark_data = mnist.validation
@@ -376,11 +380,33 @@ class BayesianVAE(object):
             benchmark_data = mnist.test
         
         total_batch = benchmark_data.num_examples // batch_size
-        ell = 0
+        ell = 0.
         for batch_i in range(total_batch):
             batch_xs, _ = benchmark_data.next_batch(batch_size)
             c = self.session.run(self.ell,
-                   feed_dict={self.X: batch_xs, self.L: 10, self.N: benchmark_data.num_examples, self.phase: False})
+                   feed_dict={self.X: batch_xs, self.L: 1, self.N: benchmark_data.num_examples})
+            ell+= c/total_batch
+            
+        if not noisy:
+            return ell
+            
+        # NOISY TEST LOG LIKELIHOOD
+        if validation:
+            benchmark_data = mnist.validation
+            title = 'Validation LogLikelihood:'
+        else:
+            benchmark_data = mnist.test
+            title = 'Test LogLikelihood:'
+        
+        total_batch = benchmark_data.num_examples // batch_size
+        ell = 0.
+        for batch_i in range(total_batch):
+            xs, _ = benchmark_data.next_batch(batch_size)
+            xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+            ys_noisy = self.session.run(self.Y,
+                   feed_dict={self.X: xs_noisy, self.L: 1, self.N: benchmark_data.num_examples})
+            c = self.session.run(self.ell,
+                   feed_dict={self.Y: ys_noisy, self.X: xs, self.L: 1, self.N: benchmark_data.num_examples})
             ell+= c/total_batch
         
         return ell
@@ -398,13 +424,16 @@ class BayesianVAE(object):
     
     def predict(self, batch):
         outputs = self.Y
-        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.L: 10, self.N: 1, self.phase: False})
+        return self.session.run(self.Y_exp, feed_dict={self.X: batch, self.L: 10, self.N: 1})
     
     def get_weights(self):
         weights = (self.prior_mean_W, self.log_prior_var_W, self.mean_W, self.log_var_W)
         return self.session.run(weights)
     
     def plot_enc_dec(self, n_examples=10, save=False):
+        """
+        Shows n_examples inputs and their reconstructions.
+        """
         # Plot example reconstructions
         xs = mnist.test.images[0:n_examples]
         recon = self.predict(test_xs)
@@ -426,6 +455,26 @@ class BayesianVAE(object):
             fig.savefig('images/'+self.name+'_recon.png')
         plt.show()
         
+    def plot_noisy_recon(self, n_examples=20, mean=0, var=0.1, save=False):
+        """
+        Shows n_examples noisy inputs and their reconstructions.
+        """
+        
+        xs = mnist.test.next_batch(n_examples)[0]
+        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        recon = self.predict(xs_noisy)
+        fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
+        for i in range(n_examples):
+            axs[0][i].imshow(np.reshape(xs_noisy[i, :], (28, 28)), cmap='gray')
+            axs[1][i].imshow(np.reshape(recon[i, ...], (28, 28)), cmap='gray')
+            axs[0][i].axis('off')
+            axs[1][i].axis('off')
+        
+        if(save):
+            fig.savefig('images/'+self.name+'_noisy_recon.png')
+        
+        return fig
+        
         
     def plot_latent_recon(self, n_examples=20, l_min=-3, l_max=3, save=False):        
         '''Visualize Reconstructions from the latent space'''
@@ -436,7 +485,7 @@ class BayesianVAE(object):
         for img_j in np.linspace(l_max, l_min, n_examples):
             for img_i in np.linspace(l_min, l_max, n_examples):
                 z = np.array([[[img_i, img_j]]], dtype=np.float32)
-                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.L: 1, self.phase: False})
+                recon = self.session.run(self.Y_exp, feed_dict={self.z: z, self.L: 1})
                 images.append(np.reshape(recon, (1, 28, 28, 1)))
         images = np.concatenate(images)
         
@@ -465,7 +514,7 @@ class BayesianVAE(object):
     def plot_latent_repr(self, n_examples = 10000, save=False):
         # Plot manifold of latent layer
         xs, ys = mnist.test.next_batch(n_examples)
-        zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.L: 10, self.phase: False})
+        zs = self.session.run(self.z_exp, feed_dict={self.X: xs, self.L: 10})
         
         fig = plt.figure(figsize=(10, 8))
         
