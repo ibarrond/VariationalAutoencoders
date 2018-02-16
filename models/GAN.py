@@ -463,7 +463,8 @@ class AAE(object):
         Shows n_examples noisy inputs and their reconstructions.
         """
         
-        xs = mnist.test.next_batch(n_examples)[0]
+        # xs = mnist.test.next_batch(n_examples)[0]
+        xs = mnist.test.images[0:n_examples]
         xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
         recon = self.predict(xs_noisy)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))

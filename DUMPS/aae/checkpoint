@@ -1,0 +1,2 @@
+model_checkpoint_path: "AAE_128_64_2"
+all_model_checkpoint_paths: "AAE_128_64_2"

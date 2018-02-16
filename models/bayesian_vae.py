@@ -18,7 +18,7 @@ class BayesianVAE(object):
         
         self.name = name
         self.n_inputs = n_inputs
-        self.n_encoder = n_neurons_encoder
+        self.n_encoder = [n_inputs] + n_neurons_encoder
         self.n_latent = n_latent
         self.n_decoder = n_neurons_decoder + [n_inputs]
         self.length_encoder = len(self.n_encoder)
@@ -73,11 +73,9 @@ class BayesianVAE(object):
         post_log_vars = []
         
         with tf.name_scope("encoder_layer_weights"):
-            for i in range(self.length_encoder):
-                if i == 0:
-                    d_in, d_out = (self.n_inputs, self.n_encoder[0])
-                else:
-                    d_in, d_out = (self.n_encoder[i-1], self.n_encoder[i])
+            for i in range(1, self.length_encoder):
+                d_in, d_out = (self.n_encoder[i-1], self.n_encoder[i])
+                print(d_in, d_out)
                     
                 d_in += 1 # account for the bias weight
                     
@@ -94,6 +92,7 @@ class BayesianVAE(object):
         with tf.name_scope("latent_layer_weights"):
             # once for mean, once for log_var
             d_in, d_out = (self.n_encoder[-1] + 1, self.n_latent)
+            print(d_in, d_out)
             for i in range(2):
                 with tf.name_scope("priors"):
                     prior_mean, prior_log_var = self.create_weight_variable([d_in, d_out], is_prior=True)
@@ -105,12 +104,14 @@ class BayesianVAE(object):
                     post_means.append(post_mean)
                     post_log_vars.append(post_log_var)
                 
-        with tf.name_scope("decoder_layer_weights"):
+        with tf.name_scope("decoder_layer_weights"):            
             for i in range(self.length_decoder):
                 if i == 0:
                     d_in, d_out = (self.n_latent, self.n_decoder[0])
                 else:
                     d_in, d_out = (self.n_decoder[i-1], self.n_decoder[i])
+                    
+                print(d_in, d_out)
                     
                 d_in += 1 # account for the bias weight
                 
@@ -157,8 +158,10 @@ class BayesianVAE(object):
         batch_size = tf.shape(self.X)[0]
         
         with tf.name_scope("encoder"):
-            for i in range(self.length_encoder):
+            for i in range(self.length_encoder-1):
                 W = self.sample_from_W(self.mean_W[i], self.log_var_W[i])
+                print(net.shape)
+                print(W.shape)
                 net = tf.matmul(net, W[:,1:,:])
                 bias = tf.expand_dims(W[:,0,:], 1)
                 net = net + bias
@@ -167,7 +170,7 @@ class BayesianVAE(object):
                 net = tf.nn.tanh(net)
                 tf.summary.histogram('outputs_l_' + str(i), net)
                 
-            i_off = self.length_encoder
+            i_off = self.length_encoder-1
             
             # latent mean
             W_mean = self.sample_from_W(self.mean_W[i_off], self.log_var_W[i_off])
@@ -184,7 +187,7 @@ class BayesianVAE(object):
         return mean, log_var
     
     def decode(self, net):
-        w_off = self.length_encoder + 2
+        w_off = self.length_encoder + 1
         with tf.name_scope("decoder"):
             for i in range(w_off, w_off + self.length_decoder):
                 W = self.sample_from_W(self.mean_W[i], self.log_var_W[i])
@@ -435,7 +438,7 @@ class BayesianVAE(object):
         Shows n_examples inputs and their reconstructions.
         """
         # Plot example reconstructions
-        xs = mnist.test.images[0:n_examples]
+        test_xs = mnist.test.images[0:n_examples]
         recon = self.predict(test_xs)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for example_i in range(n_examples):
@@ -460,8 +463,8 @@ class BayesianVAE(object):
         Shows n_examples noisy inputs and their reconstructions.
         """
         
-        xs = mnist.test.next_batch(n_examples)[0]
-        xs_noisy = np.clip(xs + np.random.normal(mean, var, xs.shape), 0 ,1)
+        test_xs = mnist.test.images[0:n_examples]
+        xs_noisy = np.clip(test_xs + np.random.normal(mean, var, test_xs.shape), 0 ,1)
         recon = self.predict(xs_noisy)
         fig, axs = plt.subplots(2, n_examples, figsize=(20, 4))
         for i in range(n_examples):
